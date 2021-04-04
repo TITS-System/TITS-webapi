@@ -1,0 +1,1 @@
+killall -s 9 dotnet
