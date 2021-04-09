@@ -56,7 +56,7 @@ namespace TitsAPI.Areas.API
             
             var productPackTemplateIds = createOrderDto.ProductPackTemplateIds;
 
-            var productPackTemplates = await Context.ProductPackTemplates
+            var productPackTemplates = await Context.MenuProductPacks
                 .Include(ppt => ppt.Products)
                 .ThenInclude(pt => pt.Ingredients)
                 .Where(ppt => productPackTemplateIds.Contains(ppt.Id))

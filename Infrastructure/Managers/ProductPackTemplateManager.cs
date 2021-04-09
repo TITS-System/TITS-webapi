@@ -20,7 +20,7 @@ namespace Infrastructure.Managers
                 Price = price,
                 Products = new List<MenuProduct>()
             };
-            Context.ProductPackTemplates.Add(menuProductPack);
+            Context.MenuProductPacks.Add(menuProductPack);
             Context.SaveChanges();
             return menuProductPack;
         }

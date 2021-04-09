@@ -11,5 +11,7 @@ namespace Models.DTOs.Requests
         public ICollection<long> Ingredients { get; set; }
 
         public long ProductCategoryId { get; set; }
+
+        public long ProductPackId { get; set; }
     }
 }

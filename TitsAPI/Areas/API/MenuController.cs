@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using AutoMapper;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
+using Models.Db;
+using Models.DTOs.Misc;
 using Models.DTOs.Requests;
 using TitsAPI.Controllers;
 using TitsAPI.Filters;
@@ -10,29 +13,48 @@ namespace TitsAPI.Areas.API
 {
     public class MenuController : TitsController
     {
-        public MenuController(TitsDbContext context) : base(context)
+        private IMapper _mapper;
+
+        public MenuController(TitsDbContext context, IMapper mapper) : base(context)
         {
+            _mapper = mapper;
         }
 
         [HttpPost]
         [TypeFilter(typeof(CheckAuthTokenFilter))]
-        public async Task CreateIngredient([FromBody] CreateIngredientDto createIngredientDto)
+        public async Task<ActionResult<CreatedDto>> CreateIngredient([FromBody] CreateIngredientDto createIngredientDto)
         {
-            throw new NotImplementedException();
+            var menuIngredient = _mapper.Map<MenuIngredient>(createIngredientDto);
+
+            await Context.MenuIngredients.AddAsync(menuIngredient);
+            await Context.SaveChangesAsync();
+
+            return new CreatedDto(menuIngredient.Id);
         }
 
         [HttpPost]
         [TypeFilter(typeof(CheckAuthTokenFilter))]
-        public async Task CreateProduct([FromBody] CreateProductDto createProductDto)
+        public async Task<ActionResult<CreatedDto>> CreateProduct([FromBody] CreateProductDto createProductDto)
         {
-            throw new NotImplementedException();
+            var menuProduct = _mapper.Map<MenuProduct>(createProductDto);
+
+            await Context.MenuProducts.AddAsync(menuProduct);
+            await Context.SaveChangesAsync();
+
+            return new CreatedDto(menuProduct.Id);
         }
 
         [HttpPost]
         [TypeFilter(typeof(CheckAuthTokenFilter))]
-        public async Task CreateProductPack([FromBody] CreateProductPackDto createProductPackDto)
+        public async Task<ActionResult<CreatedDto>> CreateProductPack(
+            [FromBody] CreateProductPackDto createProductPackDto)
         {
-            throw new NotImplementedException();
+            var menuProductPack = _mapper.Map<MenuProductPack>(createProductPackDto);
+
+            await Context.MenuProductPacks.AddAsync(menuProductPack);
+            await Context.SaveChangesAsync();
+
+            return new CreatedDto(menuProductPack.Id);
         }
     }
 }

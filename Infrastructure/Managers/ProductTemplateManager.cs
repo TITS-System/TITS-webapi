@@ -22,7 +22,7 @@ namespace Infrastructure.Managers
                 Ingredients = new List<MenuIngredient>(),
                 MenuProductPack = menuProductPack
             };
-            Context.ProductTemplates.Add(menuProduct);
+            Context.MenuProducts.Add(menuProduct);
             Context.SaveChanges();
             return menuProduct;
         }

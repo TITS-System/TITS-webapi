@@ -19,7 +19,7 @@ namespace Infrastructure.Managers
                 Weight = weightGrams,
                 MenuProduct = menuProduct
             };
-            Context.IngredientTemplates.Add(menuIngredient);
+            Context.MenuIngredients.Add(menuIngredient);
             Context.SaveChanges();
             return menuIngredient;
         }
