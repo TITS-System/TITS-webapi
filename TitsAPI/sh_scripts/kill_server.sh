@@ -1,1 +1,1 @@
-ps aux | grep DodoHackAPI | grep -v grep | awk '{print $2}' | sudo xargs kill
+ps aux | grep TitsAPI | grep -v grep | awk '{print $2}' | sudo xargs kill
