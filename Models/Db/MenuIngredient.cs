@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Db
 {
-    public class IngredientTemplate
+    public class MenuIngredient
     {
         public long Id { get; set; }
 
@@ -13,9 +13,9 @@ namespace Models.Db
         // TODO: Price for 100g, or 1kg
         // public float Price { get; set; }
 
-        [ForeignKey(nameof(Product))]
+        [ForeignKey(nameof(MenuProduct))]
         public long ProductId { get; set; }
         
-        public virtual ProductTemplate Product { get; set; }
+        public virtual MenuProduct MenuProduct { get; set; }
     }
 }

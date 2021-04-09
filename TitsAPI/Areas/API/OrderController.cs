@@ -52,6 +52,8 @@ namespace TitsAPI.Areas.API
         [TypeFilter(typeof(CheckAuthTokenFilter))]
         public async Task<ActionResult<CreatedDto>> Create([FromBody] CreateOrderDto createOrderDto)
         {
+            var accountSession = await GetRequestSession();
+            
             var productPackTemplateIds = createOrderDto.ProductPackTemplateIds;
 
             var productPackTemplates = await Context.ProductPackTemplates
@@ -62,7 +64,8 @@ namespace TitsAPI.Areas.API
             
             var order = new Order
             {
-                CreationDateTime = DateTime.Now
+                CreationDateTime = DateTime.Now,
+                AccountId = accountSession.AccountId
             };
 
             foreach (var productPackTemplate in productPackTemplates)

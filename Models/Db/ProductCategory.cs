@@ -10,7 +10,7 @@ namespace Models.Db
 
         public string TitleRu { get; set; }
 
-        public virtual ICollection<ProductTemplate> ProductTemplates { get; set; }
+        public virtual ICollection<MenuProduct> ProductTemplates { get; set; }
         
         public virtual ICollection<OrderProduct> OrderProducts { get; set; }
     }

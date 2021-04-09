@@ -11,17 +11,17 @@ namespace Infrastructure.Managers
             Context = context;
         }
 
-        public IngredientTemplate CreateIngredientTemplate(ProductTemplate productTemplate, string title, int weightGrams)
+        public MenuIngredient CreateIngredientTemplate(MenuProduct menuProduct, string title, int weightGrams)
         {
-            IngredientTemplate ingredientTemplate = new()
+            MenuIngredient menuIngredient = new()
             {
                 Title = title,
                 Weight = weightGrams,
-                Product = productTemplate
+                MenuProduct = menuProduct
             };
-            Context.IngredientTemplates.Add(ingredientTemplate);
+            Context.IngredientTemplates.Add(menuIngredient);
             Context.SaveChanges();
-            return ingredientTemplate;
+            return menuIngredient;
         }
     }
 }

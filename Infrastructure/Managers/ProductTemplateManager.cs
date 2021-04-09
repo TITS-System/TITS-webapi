@@ -12,19 +12,19 @@ namespace Infrastructure.Managers
             Context = context;
         }
 
-        public ProductTemplate CreateProductTemplate(ProductPackTemplate productPackTemplate, string title, float price, ProductCategory productCategory)
+        public MenuProduct CreateProductTemplate(MenuProductPack menuProductPack, string title, float price, ProductCategory productCategory)
         {
-            ProductTemplate productTemplate = new()
+            MenuProduct menuProduct = new()
             {
                 Title = title,
                 Price = price,
                 ProductCategory = productCategory,
-                Ingredients = new List<IngredientTemplate>(),
-                ProductPack = productPackTemplate
+                Ingredients = new List<MenuIngredient>(),
+                MenuProductPack = menuProductPack
             };
-            Context.ProductTemplates.Add(productTemplate);
+            Context.ProductTemplates.Add(menuProduct);
             Context.SaveChanges();
-            return productTemplate;
+            return menuProduct;
         }
     }
 }

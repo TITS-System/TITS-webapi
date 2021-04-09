@@ -19,10 +19,12 @@ namespace Models.Db
         public long MainWorkPointId { get; set; }
 
         public virtual WorkPoint MainWorkPoint { get; set; }
-        
+
         [ForeignKey(nameof(LastWorkSession))]
         public long? LastWorkSessionId { get; set; }
 
         public virtual WorkSession LastWorkSession { get; set; }
+
+        public virtual ICollection<LatLng> LatLngs { get; set; }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Models.Db
 {
-    public class ProductPackTemplate
+    public class MenuProductPack
     {
         public long Id { get; set; }
 
@@ -10,6 +10,6 @@ namespace Models.Db
 
         public float Price { get; set; }
         
-        public virtual ICollection<ProductTemplate> Products { get; set; }
+        public virtual ICollection<MenuProduct> Products { get; set; }
     }
 }

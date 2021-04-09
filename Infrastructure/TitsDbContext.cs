@@ -39,9 +39,9 @@ namespace Infrastructure
 
         public DbSet<ProductCategory> ProductCategories { get; set; }
 
-        public DbSet<IngredientTemplate> IngredientTemplates { get; set; }
-        public DbSet<ProductTemplate> ProductTemplates { get; set; }
-        public DbSet<ProductPackTemplate> ProductPackTemplates { get; set; }
+        public DbSet<MenuIngredient> IngredientTemplates { get; set; }
+        public DbSet<MenuProduct> ProductTemplates { get; set; }
+        public DbSet<MenuProductPack> ProductPackTemplates { get; set; }
 
         public DbSet<OrderIngredient> OrderIngredients { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }

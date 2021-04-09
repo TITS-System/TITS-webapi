@@ -18,27 +18,27 @@ namespace TitsAPI.AutoMapperProfiles
 
             // Базовые мапы для DTO
             // -------------------------------------------------
-            CreateMap<IngredientDto, IngredientTemplate>().ReverseMap();
+            CreateMap<IngredientDto, MenuIngredient>().ReverseMap();
             CreateMap<IngredientDto, OrderIngredient>().ReverseMap();
 
             CreateMap<ProductDto, OrderProduct>().ReverseMap();
-            CreateMap<ProductDto, ProductTemplate>().ReverseMap();
+            CreateMap<ProductDto, MenuProduct>().ReverseMap();
 
             CreateMap<ProductPackDto, OrderProductPack>().ReverseMap();
-            CreateMap<ProductPackDto, ProductPackTemplate>().ReverseMap();
+            CreateMap<ProductPackDto, MenuProductPack>().ReverseMap();
 
             CreateMap<OrderDto, Order>().ReverseMap();
             // -------------------------------------------------
 
             // Create DTOs
             // -------------------------------------------------
-            CreateMap<CreateIngredientDto, IngredientTemplate>().ReverseMap();
+            CreateMap<CreateIngredientDto, MenuIngredient>().ReverseMap();
             CreateMap<CreateIngredientDto, OrderIngredient>().ReverseMap();
 
-            CreateMap<CreateProductDto, ProductTemplate>().ReverseMap();
+            CreateMap<CreateProductDto, MenuProduct>().ReverseMap();
             CreateMap<CreateProductDto, OrderProduct>().ReverseMap();
 
-            CreateMap<CreateProductPackDto, ProductPackTemplate>().ReverseMap();
+            CreateMap<CreateProductPackDto, MenuProductPack>().ReverseMap();
             CreateMap<CreateProductPackDto, OrderProductPack>().ReverseMap();
 
             CreateMap<CreateOrderDto, Order>().ReverseMap();
@@ -46,15 +46,15 @@ namespace TitsAPI.AutoMapperProfiles
 
             // Create Template-To-Order Mappings
             // -------------------------------------------------
-            CreateMap<IngredientTemplate, OrderIngredient>()
+            CreateMap<MenuIngredient, OrderIngredient>()
                 .ForMember(oi=>oi.Id, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(it=>it.Id, opt => opt.Ignore());
-            CreateMap<ProductTemplate, OrderProduct>()
+            CreateMap<MenuProduct, OrderProduct>()
                 .ForMember(op=>op.Id, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(pt=>pt.Id, opt => opt.Ignore());
-            CreateMap<ProductPackTemplate, OrderProductPack>()
+            CreateMap<MenuProductPack, OrderProductPack>()
                 .ForMember(opp=>opp.Id, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(ppt=>ppt.Id, opt => opt.Ignore());
