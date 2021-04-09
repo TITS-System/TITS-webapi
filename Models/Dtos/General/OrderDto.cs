@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using Models.Dtos.General;
+using System;
+using System.Collections.Generic;
 
-namespace Models.Dtos.Responses
+namespace Models.DTOs.General
 {
     public class OrderDto
     {
-        public long Id { get; set; }
-        public LatLngDto Destination { get; set; }
-        public ICollection<OrderProductDto> Products { get; set; }
-        public CourierDto Courier { get; set; }
+        public DateTime CreationDateTime { get; set; }
+        public ICollection<ProductPackDto> ProductPacks { get; set; }
     }
 }

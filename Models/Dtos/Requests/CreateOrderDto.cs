@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
-namespace Models.Dtos.Requests
+namespace Models.DTOs.Requests
 {
     public class CreateOrderDto
     {
-        public long DestinationId { get; set; }
-        
-        public ICollection<long> Templates { get; set; }
+        public ICollection<long> ProductPackTemplateIds { get; set; }
     }
 }

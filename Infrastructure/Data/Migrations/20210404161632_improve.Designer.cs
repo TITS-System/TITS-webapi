@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Data.Migrations
 {
-    [DbContext(typeof(DodoHackDbContext))]
+    [DbContext(typeof(TitsDbContext))]
     [Migration("20210404161632_improve")]
     partial class improve
     {
