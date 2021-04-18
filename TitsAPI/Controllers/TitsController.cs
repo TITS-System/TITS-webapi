@@ -4,17 +4,19 @@ using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.Db;
+using Models.Db.Sessions;
 using Models.DTOs.Misc;
+using Services.Abstractions;
 
 namespace TitsAPI.Controllers
 {
     public class TitsController : Controller
     {
-        protected TitsDbContext Context;
+        private ITokenSessionService _tokenSessionService;
 
-        public TitsController(TitsDbContext context)
+        public TitsController(ITokenSessionService tokenSessionService)
         {
-            Context = context;
+            _tokenSessionService = tokenSessionService;
         }
 
         [NonAction]
@@ -30,21 +32,18 @@ namespace TitsAPI.Controllers
         }
 
         [NonAction]
-        protected async Task<AccountSession> GetRequestSession()
+        protected async Task<TokenSession> GetRequestSession()
         {
             var headers = ControllerContext.HttpContext.Request.Headers;
             if (headers.ContainsKey("auth-token"))
             {
                 string authToken = headers["auth-token"];
 
-                var accountSession = await Context
-                    .AccountSessions
-                    .Include(session => session.Account)
-                    .FirstOrDefaultAsync(session => session.Token == authToken);
+                var requestSession = await _tokenSessionService.GetByToken(authToken);
 
-                if (accountSession != null)
+                if (requestSession != null)
                 {
-                    return accountSession;
+                    return requestSession;
                 }
                 else
                 {

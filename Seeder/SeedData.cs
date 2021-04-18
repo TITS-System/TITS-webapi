@@ -1,138 +1,60 @@
 ﻿using System;
 using System.Linq;
+using AutoMapper;
 using Infrastructure;
-using Infrastructure.Managers;
+using Infrastructure.Abstractions;
+using Infrastructure.Implementations;
 using Infrastructure.Verbatims;
-using Models.Db;
+using Models.Db.Account;
+using Models.DTOs.WorkerAccountDtos;
+using Services.Abstractions;
+using Services.AutoMapperProfiles;
+using Services.Implementations;
 
 namespace Seeder
 {
     public class SeedData
     {
+        private IWorkerAccountService _workerAccountService;
+        private IWorkerRoleService _workerRoleService;
+        
         public SeedData(TitsDbContext context)
         {
             Context = context;
-            AccountRoleManager = new AccountRoleManager(context);
-            AccountManager = new AccountManager(context);
-            IngredientTemplateManager = new IngredientTemplateManager(context);
-            ProductCategoryManager = new ProductCategoryManager(context);
-            ProductPackTemplateManager = new ProductPackTemplateManager(context);
-            ProductTemplateManager = new ProductTemplateManager(context);
+            
+            IMapper mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new TitsAutomapperProfile())));
+
+            var workerAccountRepository = new WorkerAccountRepository(Context);
+            var workerRoleRepository = new WorkerRoleRepository(Context);
+            var workerToRoleRepository = new WorkerToRoleRepository(Context);
+
+            _workerAccountService = new WorkerAccountService(workerAccountRepository, workerRoleRepository, workerToRoleRepository, mapper);
+            _workerRoleService = new WorkerRoleService(workerAccountRepository, workerRoleRepository, workerToRoleRepository, mapper);
         }
 
         private TitsDbContext Context { get; set; }
 
-        private AccountManager AccountManager { get; set; }
-
-        private AccountRoleManager AccountRoleManager { get; set; }
-
-        private IngredientTemplateManager IngredientTemplateManager { get; set; }
-
-        private ProductCategoryManager ProductCategoryManager { get; set; }
-
-        private ProductPackTemplateManager ProductPackTemplateManager { get; set; }
-
-        private ProductTemplateManager ProductTemplateManager { get; set; }
-
-        public void Seed()
+        public async void Seed()
         {
             SeedAccountRoles();
-            SeedProductCategories();
 
-            WorkPoint workPoint = new WorkPoint();
-            WorkPoint defaultWorkPoint = new WorkPoint();
-            Context.WorkPoints.Add(workPoint);
-            Context.WorkPoints.Add(defaultWorkPoint);
-            Context.SaveChanges();
-
-            var admin = AccountManager.CreateAccount("Admin", "Admin", "SuperAdmin", workPoint);
-            var courier = AccountManager.CreateAccount("Courier", "Courier", "SuperCourier", workPoint);
-            var client = AccountManager.CreateAccount("Client", "Client", "SuperClient", defaultWorkPoint);
+            var courierId = (await _workerAccountService.CreateAccount(new CreateWorkerAccountDto(){Login = "Courier", Password = "Courier", Username = "Misha"})).Id;
+            var managerId = (await _workerAccountService.CreateAccount(new CreateWorkerAccountDto(){Login = "Manager", Password = "Manager", Username = "Vitaliy"})).Id;
             
-            AccountRoleManager.AddAccountRole(admin, AccountRolesVerbatim.Superuser);
-            AccountRoleManager.AddAccountRole(courier, AccountRolesVerbatim.Courier);
-            AccountRoleManager.AddAccountRole(client, AccountRolesVerbatim.Client);
+            await _workerRoleService.AddToRole(courierId, WorkerRolesVerbatim.Courier);
+            await _workerRoleService.AddToRole(managerId, WorkerRolesVerbatim.Manager);
             
-            Console.WriteLine("Seeded accounts with roles");
-
-            var productPackTemplate = ProductPackTemplateManager.CreateProductPack("Лосось 150г", 180);
-            var productTemplate = ProductTemplateManager.CreateProductTemplate(
-                productPackTemplate,
-                "Лосось 150г",
-                0,
-                ProductCategoryManager.FindByTitleEn(ProductCategoryVerbatim.CommonRoll)
-            );
-            var ingredientTemplate = IngredientTemplateManager.CreateIngredientTemplate(productTemplate, "Рис", 100);
-            
-            Console.WriteLine("Seeded Product Pack Template");
-
-            // Order order = new Order() {CreationDateTime = DateTime.Now};
-            // Context.Orders.Add(order);
-            // Context.SaveChanges();
-            //
-            // OrderProductPack orderProductPack = new OrderProductPack()
-            // {
-            //     Order = order,
-            //     Title = productPackTemplate.Title,
-            //     Price = productPackTemplate.Price
-            // };
-            // Context.OrderProductPacks.Add(orderProductPack);
-            // Context.SaveChanges();
-            //
-            // OrderProduct orderProduct = new OrderProduct()
-            // {
-            //     ProductCategory = productTemplate.ProductCategory,
-            //     ProductPack = orderProductPack,
-            //     Price = productTemplate.Price,
-            //     Title = productTemplate.Title
-            // };
-            //
-            // Context.OrderProducts.Add(orderProduct);
-            //
-            // OrderIngredient orderIngredient = new OrderIngredient()
-            // {
-            //     Product = orderProduct,
-            //     Title = ingredientTemplate.Title,
-            //     Weight = ingredientTemplate.Weight
-            // };
-            //
-            // Context.OrderIngredients.Add(orderIngredient);
-            // Context.SaveChanges();
-
-            ScheduledWorkSession scheduledWorkSession1 = new ScheduledWorkSession()
-            {
-                AccountId = client.Id,
-                StartDateTime = DateTime.Today.AddHours(8), // today at 8 hours
-                EndDateTime = DateTime.Today.AddHours(21), // today at 21 hours
-                WorkPointId = workPoint.Id
-            };
-            
-            Context.ScheduledWorkSessions.Add(scheduledWorkSession1);
-            
-            Console.WriteLine("Seeded scheduled worksessions");
-            
-            Context.SaveChanges();
+            await Context.SaveChangesAsync();
         }
 
         private void SeedAccountRoles()
         {
-            Context.AccountRoles.AddRange(
-                from accountRoleEn in AccountRolesVerbatim.EnToRu.Keys
-                select new AccountRole {TitleEn = accountRoleEn, TitleRu = AccountRolesVerbatim.EnToRu[accountRoleEn]}
+            Context.WorkerRoles.AddRange(
+                from accountRoleEn in WorkerRolesVerbatim.EnToRu.Keys
+                select new WorkerRole {TitleEn = accountRoleEn, TitleRu = WorkerRolesVerbatim.EnToRu[accountRoleEn]}
             );
             Context.SaveChanges();
             Console.WriteLine("Seeded account roles");
-        }
-
-        private void SeedProductCategories()
-        {
-            Context.ProductCategories.AddRange(
-                from productCategoryEn in ProductCategoryVerbatim.EnToRu.Keys
-                select new ProductCategory
-                    {TitleEn = productCategoryEn, TitleRu = ProductCategoryVerbatim.EnToRu[productCategoryEn]}
-            );
-            Context.SaveChanges();
-            Console.WriteLine("Seeded product categories");
         }
     }
 }

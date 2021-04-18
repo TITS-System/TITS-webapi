@@ -22,7 +22,7 @@ namespace TitsAPI.Filters
         {
             if (context.HttpContext.TryGetAuthToken(out var authToken))
             {
-                var accountSession = await _context.AccountSessions.FirstOrDefaultAsync(session => session.Token == authToken);
+                var accountSession = await _context.TokenSessions.FirstOrDefaultAsync(session => session.Token == authToken);
                 if (accountSession == null)
                 {
                     context.Result = new UnauthorizedObjectResult(new ErrorDto(MessagesVerbatim.AuthTokenUnknown));

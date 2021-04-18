@@ -1,5 +1,7 @@
 using System.IO;
 using Infrastructure;
+using Infrastructure.Abstractions;
+using Infrastructure.Implementations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -7,7 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Services.Abstractions;
+using Services.AutoMapperProfiles;
+using Services.Implementations;
 
 namespace TitsAPI
 {
@@ -39,7 +45,20 @@ namespace TitsAPI
             // DbContext will take connection string from Environment or throw
             services.AddDbContext<TitsDbContext>();
 
-            services.AddAutoMapper(typeof(Startup));
+            // Add Repositories
+            services.AddScoped<ITokenSessionRepository, TokenSessionRepository>();
+            services.AddScoped<IWorkerAccountRepository, WorkerAccountRepository>();
+            services.AddScoped<IWorkerRoleRepository, WorkerRoleRepository>();
+            services.AddScoped<IWorkerToRoleRepository, WorkerToRoleRepository>();
+
+            // Add Services
+            services.AddScoped<ITokenSessionService, TokenSessionService>();
+            services.AddScoped<IWorkerAccountService, WorkerAccountService>();
+            services.AddScoped<IWorkerRoleService, WorkerRoleService>();
+
+            services.AddAutoMapper(cfg => cfg.AddProfile(new TitsAutomapperProfile()));
+
+            services.AddSwaggerGen(swagger => swagger.SwaggerDoc("v1", new OpenApiInfo() {Title = "TITS Swagger"}));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +66,12 @@ namespace TitsAPI
         {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My First Swagger");
+                c.RoutePrefix = "docs";
+            });
 
             WWWRootPath = Path.GetFullPath("../TITS_front", env.ContentRootPath);
 
