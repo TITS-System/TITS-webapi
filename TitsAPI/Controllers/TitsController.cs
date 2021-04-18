@@ -10,6 +10,8 @@ using Services.Abstractions;
 
 namespace TitsAPI.Controllers
 {
+    // TODO: Remove this Route Attribute, it is only required for Swagger
+    [Route("/api/[controller]/[action]/")]
     public class TitsController : Controller
     {
         private ITokenSessionService _tokenSessionService;

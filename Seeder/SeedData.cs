@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Abstractions;
@@ -17,11 +18,11 @@ namespace Seeder
     {
         private IWorkerAccountService _workerAccountService;
         private IWorkerRoleService _workerRoleService;
-        
-        public SeedData(TitsDbContext context)
+
+        public SeedData()
         {
-            Context = context;
-            
+            Context = new TitsDbContext();
+
             IMapper mapper = new Mapper(new MapperConfiguration(cfg => cfg.AddProfile(new TitsAutomapperProfile())));
 
             var workerAccountRepository = new WorkerAccountRepository(Context);
@@ -34,17 +35,15 @@ namespace Seeder
 
         private TitsDbContext Context { get; set; }
 
-        public async void Seed()
+        public async Task Seed()
         {
             SeedAccountRoles();
 
-            var courierId = (await _workerAccountService.CreateAccount(new CreateWorkerAccountDto(){Login = "Courier", Password = "Courier", Username = "Misha"})).Id;
-            var managerId = (await _workerAccountService.CreateAccount(new CreateWorkerAccountDto(){Login = "Manager", Password = "Manager", Username = "Vitaliy"})).Id;
-            
+            var courierId = (await _workerAccountService.CreateAccount(new CreateWorkerAccountDto() {Login = "Courier", Password = "Courier", Username = "Misha"})).Id;
+            var managerId = (await _workerAccountService.CreateAccount(new CreateWorkerAccountDto() {Login = "Manager", Password = "Manager", Username = "Vitaliy"})).Id;
+
             await _workerRoleService.AddToRole(courierId, WorkerRolesVerbatim.Courier);
             await _workerRoleService.AddToRole(managerId, WorkerRolesVerbatim.Manager);
-            
-            await Context.SaveChangesAsync();
         }
 
         private void SeedAccountRoles()

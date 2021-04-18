@@ -1,6 +1,7 @@
 using AutoMapper;
 using Models.Db.Account;
 using Models.DTOs.Responses;
+using Models.DTOs.WorkerAccountDtos;
 
 namespace Services.AutoMapperProfiles
 {
@@ -15,6 +16,7 @@ namespace Services.AutoMapperProfiles
             // ReverseMap() нужен для обратной конвертации любого мапа
 
             CreateMap<WorkerRoleDto, WorkerRole>().ReverseMap();
+            CreateMap<CreateWorkerAccountDto, WorkerAccount>().ReverseMap();
         }
     }
 }

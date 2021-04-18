@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Infrastructure;
 
 namespace Seeder
@@ -10,9 +11,9 @@ namespace Seeder
             return new();
         }
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            new SeedData(GetContext()).Seed();
+            await new SeedData().Seed();
             Console.WriteLine("Seeded successfully");
         }
     }
