@@ -16,7 +16,7 @@ namespace Infrastructure.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.4")
+                .HasAnnotation("ProductVersion", "5.0.5")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("Models.Db.Account.WorkerAccount", b =>
@@ -25,6 +25,9 @@ namespace Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long?>("LastLatLngId")
+                        .HasColumnType("bigint");
 
                     b.Property<long?>("LastTokenSessionId")
                         .HasColumnType("bigint");
@@ -76,6 +79,102 @@ namespace Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WorkerRoles");
+                });
+
+            modelBuilder.Entity("Models.Db.Delivery", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long>("CourierAccountId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("OrderId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourierAccountId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("Deliveries");
+                });
+
+            modelBuilder.Entity("Models.Db.LatLng", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long?>("DeliveryId")
+                        .HasColumnType("bigint");
+
+                    b.Property<float>("Lat")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Lng")
+                        .HasColumnType("real");
+
+                    b.Property<long?>("OrderId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("RestaurantId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeliveryId");
+
+                    b.HasIndex("OrderId")
+                        .IsUnique();
+
+                    b.HasIndex("RestaurantId")
+                        .IsUnique();
+
+                    b.ToTable("LatLngs");
+                });
+
+            modelBuilder.Entity("Models.Db.Order", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("DestinationLatLngId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("RestaurantId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Models.Db.Restaurant", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<long>("LocationLatLngId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Restaurants");
                 });
 
             modelBuilder.Entity("Models.Db.Sessions.TokenSession", b =>
@@ -132,6 +231,57 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("WorkerRole");
                 });
 
+            modelBuilder.Entity("Models.Db.Delivery", b =>
+                {
+                    b.HasOne("Models.Db.Account.WorkerAccount", "CourierAccount")
+                        .WithMany()
+                        .HasForeignKey("CourierAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Db.Order", "Order")
+                        .WithMany("Deliveries")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CourierAccount");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("Models.Db.LatLng", b =>
+                {
+                    b.HasOne("Models.Db.Delivery", "Delivery")
+                        .WithMany("LatLngs")
+                        .HasForeignKey("DeliveryId");
+
+                    b.HasOne("Models.Db.Order", "Order")
+                        .WithOne("DestinationLatLng")
+                        .HasForeignKey("Models.Db.LatLng", "OrderId");
+
+                    b.HasOne("Models.Db.Restaurant", "Restaurant")
+                        .WithOne("LocationLatLng")
+                        .HasForeignKey("Models.Db.LatLng", "RestaurantId");
+
+                    b.Navigation("Delivery");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Restaurant");
+                });
+
+            modelBuilder.Entity("Models.Db.Order", b =>
+                {
+                    b.HasOne("Models.Db.Restaurant", "Restaurant")
+                        .WithMany("Orders")
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
+                });
+
             modelBuilder.Entity("Models.Db.Sessions.TokenSession", b =>
                 {
                     b.HasOne("Models.Db.Account.WorkerAccount", "WorkerAccount")
@@ -151,6 +301,25 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Models.Db.Account.WorkerRole", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Models.Db.Delivery", b =>
+                {
+                    b.Navigation("LatLngs");
+                });
+
+            modelBuilder.Entity("Models.Db.Order", b =>
+                {
+                    b.Navigation("Deliveries");
+
+                    b.Navigation("DestinationLatLng");
+                });
+
+            modelBuilder.Entity("Models.Db.Restaurant", b =>
+                {
+                    b.Navigation("LocationLatLng");
+
+                    b.Navigation("Orders");
                 });
 #pragma warning restore 612, 618
         }

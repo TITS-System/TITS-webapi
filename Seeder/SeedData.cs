@@ -6,6 +6,7 @@ using Infrastructure;
 using Infrastructure.Abstractions;
 using Infrastructure.Implementations;
 using Infrastructure.Verbatims;
+using Models.Db;
 using Models.Db.Account;
 using Models.DTOs.WorkerAccountDtos;
 using Services.Abstractions;
@@ -19,6 +20,9 @@ namespace Seeder
         private IWorkerAccountService _workerAccountService;
         private IWorkerRoleService _workerRoleService;
 
+        private IRestaurantRepository _restaurantRepository;
+        private ILatLngRepository _latLngRepository;
+        
         public SeedData()
         {
             Context = new TitsDbContext();
@@ -28,6 +32,8 @@ namespace Seeder
             var workerAccountRepository = new WorkerAccountRepository(Context);
             var workerRoleRepository = new WorkerRoleRepository(Context);
             var workerToRoleRepository = new WorkerToRoleRepository(Context);
+            _restaurantRepository = new RestaurantRepository(Context);
+            _latLngRepository = new LatLngRepository(Context);
 
             _workerAccountService = new WorkerAccountService(workerAccountRepository, workerRoleRepository, workerToRoleRepository, mapper);
             _workerRoleService = new WorkerRoleService(workerAccountRepository, workerRoleRepository, workerToRoleRepository, mapper);
@@ -44,6 +50,13 @@ namespace Seeder
 
             await _workerRoleService.AddToRole(courierId, WorkerRolesVerbatim.Courier);
             await _workerRoleService.AddToRole(managerId, WorkerRolesVerbatim.Manager);
+
+            var latLng = new LatLng() {Lat = 57.0f, Lng = 49.0f};
+            await _latLngRepository.Insert(latLng);
+            var restaurant = new Restaurant() {LocationLatLngId = latLng.Id};
+            await _restaurantRepository.Insert(restaurant);
+            latLng.RestaurantId = restaurant.Id;
+            await _latLngRepository.Update(latLng);
         }
 
         private void SeedAccountRoles()

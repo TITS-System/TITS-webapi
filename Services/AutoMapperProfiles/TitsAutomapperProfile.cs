@@ -1,5 +1,7 @@
 using AutoMapper;
+using Models.Db;
 using Models.Db.Account;
+using Models.Dtos;
 using Models.DTOs.Responses;
 using Models.DTOs.WorkerAccountDtos;
 
@@ -17,6 +19,12 @@ namespace Services.AutoMapperProfiles
 
             CreateMap<WorkerRoleDto, WorkerRole>().ReverseMap();
             CreateMap<CreateWorkerAccountDto, WorkerAccount>().ReverseMap();
+
+            CreateMap<CreateOrderDto, Order>()
+                .ForMember(
+                    dto => dto.DestinationLatLng,
+                    cfg => cfg.Ignore())
+                .ReverseMap();
         }
     }
 }

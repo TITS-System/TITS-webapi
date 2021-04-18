@@ -14,6 +14,10 @@ namespace Models.Db.Account
         public long? LastTokenSessionId { get; set; }
 
         public virtual TokenSession LastTokenSession { get; set; }
+
+        public long? LastLatLngId { get; set; }
+        
+        
         
         // public virtual ICollection<Order> CreatedOrders { get; set; }
     }

@@ -34,6 +34,13 @@ namespace Services.Implementations
         {
             var workerAccount = _mapper.Map<WorkerAccount>(createWorkerAccountDto);
 
+            var findLoginWorkerAccount = await _workerAccountRepository.GetByLogin(workerAccount.Login);
+
+            if (findLoginWorkerAccount != null)
+            {
+                throw new("Login already exists");
+            }
+
             await _workerAccountRepository.Insert(workerAccount);
 
             return new CreatedDto(workerAccount.Id);
