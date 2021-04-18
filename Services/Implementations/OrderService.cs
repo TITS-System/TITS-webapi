@@ -33,14 +33,20 @@ namespace Services.Implementations
                 throw new("Restaurant not found");
             }
 
+            // Create an entity
             var latLng = _mapper.Map<LatLng>(createOrderDto.Destination);
-
             await _latLngRepository.Insert(latLng);
 
             var order = _mapper.Map<Order>(createOrderDto);
-
+            
+            // DestinationLatLng is ignored when mapping
+            // Save entity with reference
             order.DestinationLatLngId = latLng.Id;
             await _orderRepository.Insert(order);
+
+            // Save backing reference
+            latLng.OrderId = order.Id;
+            await _latLngRepository.Update(latLng);
 
             return new CreatedDto(order.Id);
         }

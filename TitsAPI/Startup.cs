@@ -51,11 +51,16 @@ namespace TitsAPI
             services.AddScoped<IWorkerAccountRepository, WorkerAccountRepository>();
             services.AddScoped<IWorkerRoleRepository, WorkerRoleRepository>();
             services.AddScoped<IWorkerToRoleRepository, WorkerToRoleRepository>();
+            services.AddScoped<IDeliveryRepository, DeliveryRepository>();
+            services.AddScoped<ILatLngRepository, LatLngRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 
             // Add Services
             services.AddScoped<ITokenSessionService, TokenSessionService>();
             services.AddScoped<IWorkerAccountService, WorkerAccountService>();
             services.AddScoped<IWorkerRoleService, WorkerRoleService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             services.AddAutoMapper(cfg => cfg.AddProfile(new TitsAutomapperProfile()));
 

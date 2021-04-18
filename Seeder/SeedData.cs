@@ -51,10 +51,15 @@ namespace Seeder
             await _workerRoleService.AddToRole(courierId, WorkerRolesVerbatim.Courier);
             await _workerRoleService.AddToRole(managerId, WorkerRolesVerbatim.Manager);
 
+            // Create an entity
             var latLng = new LatLng() {Lat = 57.0f, Lng = 49.0f};
             await _latLngRepository.Insert(latLng);
+            
+            // Save it with a relation
             var restaurant = new Restaurant() {LocationLatLngId = latLng.Id};
             await _restaurantRepository.Insert(restaurant);
+            
+            // Save back reference id
             latLng.RestaurantId = restaurant.Id;
             await _latLngRepository.Update(latLng);
         }
