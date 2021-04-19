@@ -8,6 +8,7 @@ using Infrastructure.Implementations;
 using Infrastructure.Verbatims;
 using Models.Db;
 using Models.Db.Account;
+using Models.DTOs;
 using Models.DTOs.WorkerAccountDtos;
 using Services.Abstractions;
 using Services.AutoMapperProfiles;
@@ -32,10 +33,11 @@ namespace Seeder
             var workerAccountRepository = new WorkerAccountRepository(Context);
             var workerRoleRepository = new WorkerRoleRepository(Context);
             var workerToRoleRepository = new WorkerToRoleRepository(Context);
-            _restaurantRepository = new RestaurantRepository(Context);
+            var restaurantRepository = new RestaurantRepository(Context);
+            _restaurantRepository = restaurantRepository;
             _latLngRepository = new LatLngRepository(Context);
 
-            _workerAccountService = new WorkerAccountService(workerAccountRepository, workerRoleRepository, workerToRoleRepository, mapper);
+            _workerAccountService = new WorkerAccountService(workerAccountRepository, workerRoleRepository, workerToRoleRepository, mapper, restaurantRepository);
             _workerRoleService = new WorkerRoleService(workerAccountRepository, workerRoleRepository, workerToRoleRepository, mapper);
         }
 
@@ -62,6 +64,9 @@ namespace Seeder
             // Save back reference id
             latLng.RestaurantId = restaurant.Id;
             await _latLngRepository.Update(latLng);
+
+            await _workerAccountService.AssignToRestaurant(new AssignToRestaurantDto() {WorkerId = courierId, RestaurantId = restaurant.Id});
+            await _workerAccountService.AssignToRestaurant(new AssignToRestaurantDto() {WorkerId = managerId, RestaurantId = restaurant.Id});
         }
 
         private void SeedAccountRoles()

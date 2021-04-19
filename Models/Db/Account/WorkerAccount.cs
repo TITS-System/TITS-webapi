@@ -14,8 +14,18 @@ namespace Models.Db.Account
         public long? LastTokenSessionId { get; set; }
 
         public virtual TokenSession LastTokenSession { get; set; }
+        
+        [ForeignKey(nameof(MainRestaurant))]
+        public long? MainRestaurantId { get; set; }
+
+        public virtual Restaurant MainRestaurant { get; set; }
 
         public long? LastLatLngId { get; set; }
+        
+        [ForeignKey(nameof(LastWorkerSession))]
+        public long? LastWorkerSessionId { get; set; }
+
+        public virtual WorkerSession LastWorkerSession { get; set; }
         
         
         

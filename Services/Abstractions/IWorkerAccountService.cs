@@ -8,6 +8,8 @@ namespace Services.Abstractions
     public interface IWorkerAccountService
     {
         Task<CreatedDto> CreateAccount(CreateWorkerAccountDto createWorkerAccountDto);
+        
+        Task AssignToRestaurant(AssignToRestaurantDto assignToRestaurantDto);
 
         Task<GetRolesResultDto> GetRoles(long workerId);
     }

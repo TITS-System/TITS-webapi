@@ -20,14 +20,17 @@ namespace Services.Implementations
 
         private IWorkerToRoleRepository _workerToRoleRepository;
 
+        private IRestaurantRepository _restaurantRepository;
+
         private IMapper _mapper;
 
-        public WorkerAccountService(IWorkerAccountRepository workerAccountRepository, IWorkerRoleRepository workerRoleRepository, IWorkerToRoleRepository workerToRoleRepository, IMapper mapper)
+        public WorkerAccountService(IWorkerAccountRepository workerAccountRepository, IWorkerRoleRepository workerRoleRepository, IWorkerToRoleRepository workerToRoleRepository, IMapper mapper, IRestaurantRepository restaurantRepository)
         {
             _workerAccountRepository = workerAccountRepository;
             _workerToRoleRepository = workerToRoleRepository;
             _workerRoleRepository = workerRoleRepository;
             _mapper = mapper;
+            _restaurantRepository = restaurantRepository;
         }
 
         public async Task<CreatedDto> CreateAccount(CreateWorkerAccountDto createWorkerAccountDto)
@@ -44,6 +47,27 @@ namespace Services.Implementations
             await _workerAccountRepository.Insert(workerAccount);
 
             return new CreatedDto(workerAccount.Id);
+        }
+
+        public async Task AssignToRestaurant(AssignToRestaurantDto assignToRestaurantDto)
+        {
+            var workerAccount = await _workerAccountRepository.GetById(assignToRestaurantDto.WorkerId);
+
+            if (workerAccount == null)
+            {
+                throw new(MessagesVerbatim.AccountNotFound);
+            }
+
+            var workerPoint = await _restaurantRepository.GetById(assignToRestaurantDto.RestaurantId);
+
+            if (workerPoint == null)
+            {
+                throw new("WorkerPoint not found");
+            }
+
+            workerAccount.MainRestaurant = workerPoint;
+
+            await _workerAccountRepository.Update(workerAccount);
         }
 
         public async Task<GetRolesResultDto> GetRoles(long workerId)

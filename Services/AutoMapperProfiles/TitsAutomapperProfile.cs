@@ -25,6 +25,7 @@ namespace Services.AutoMapperProfiles
                     dto => dto.DestinationLatLng,
                     cfg => cfg.Ignore())
                 .ReverseMap();
+            
             CreateMap<LatLng, LatLngDto>().ReverseMap();
         }
     }

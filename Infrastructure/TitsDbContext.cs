@@ -46,5 +46,7 @@ namespace Infrastructure
         public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<LatLng> LatLngs { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
+
+        public DbSet<WorkerSession> WorkerSessions { get; set; }
     }
 }

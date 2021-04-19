@@ -55,13 +55,15 @@ namespace TitsAPI
             services.AddScoped<ILatLngRepository, LatLngRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
+            services.AddScoped<IWorkerSessionRepository, WorkerSessionRepository>();
 
             // Add Services
             services.AddScoped<ITokenSessionService, TokenSessionService>();
             services.AddScoped<IWorkerAccountService, WorkerAccountService>();
             services.AddScoped<IWorkerRoleService, WorkerRoleService>();
             services.AddScoped<IOrderService, OrderService>();
-
+            services.AddScoped<IWorkerSessionService, WorkerSessionService>();
+            
             services.AddAutoMapper(cfg => cfg.AddProfile(new TitsAutomapperProfile()));
 
             services.AddSwaggerGen(swagger => swagger.SwaggerDoc("v1", new OpenApiInfo() {Title = "TITS Swagger"}));
