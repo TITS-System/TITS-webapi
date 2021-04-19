@@ -11,6 +11,10 @@ namespace Models.Db
         [Required]
         public string Content { get; set; }
 
+        public string AddressString { get; set; }
+
+        public string AddressAdditional { get; set; }
+
         [ForeignKey(nameof(DestinationLatLng))]
         public long DestinationLatLngId { get; set; }
 

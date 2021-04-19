@@ -9,6 +9,8 @@ namespace Infrastructure.Abstractions
         Task<Delivery> GetById(long id);
         
         Task<ICollection<Delivery>> GetByOrderId(long orderId);
+        
+        Task<ICollection<Delivery>> GetByCourierId(long courierId);
 
         Task Update(Delivery delivery);
 

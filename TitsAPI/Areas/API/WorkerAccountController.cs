@@ -115,5 +115,20 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
+        
+        [HttpPost]
+        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        public async Task<ActionResult<CreatedDto>> ChangeAccountData([FromBody] ChangeAccountDataDto changeAccountDataDto)
+        {
+            try
+            {
+                await _workerAccountService.ChangeAccountData(changeAccountDataDto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
     }
 }

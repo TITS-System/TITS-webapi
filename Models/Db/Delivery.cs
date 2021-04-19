@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Models.Db.Account;
+using Models.Enums;
 
 namespace Models.Db
 {
@@ -20,5 +21,7 @@ namespace Models.Db
         public virtual WorkerAccount CourierAccount { get; set; }
 
         public virtual ICollection<LatLng> LatLngs { get; set; }
+
+        public DeliveryStatus Status { get; set; }
     }
 }

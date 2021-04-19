@@ -1,5 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Infrastructure.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using Models.Db;
 
 namespace Infrastructure.Implementations
@@ -31,6 +34,11 @@ namespace Infrastructure.Implementations
         {
             Context.LatLngs.Add(latLng);
             await Context.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<LatLng>> GetLocations(long deliveryId)
+        {
+            return await Context.LatLngs.Where(ll => ll.DeliveryId == deliveryId).ToListAsync();
         }
     }
 }

@@ -4,6 +4,7 @@ using AutoMapper;
 using Infrastructure.Abstractions;
 using Infrastructure.Verbatims;
 using Models.Db.Account;
+using Models.Dtos;
 using Models.DTOs;
 using Models.DTOs.Misc;
 using Models.DTOs.Responses;
@@ -84,6 +85,22 @@ namespace Services.Implementations
             var roleDtos = _mapper.Map<IEnumerable<WorkerRoleDto>>(roles);
 
             return new GetRolesResultDto(roleDtos);
+        }
+
+        public async Task ChangeAccountData(ChangeAccountDataDto changeAccountDataDto)
+        {
+            var workerAccount = await _workerAccountRepository.GetById(changeAccountDataDto.WorkerId);
+
+            if (workerAccount == null)
+            {
+                throw new(MessagesVerbatim.AccountNotFound);
+            }
+
+            workerAccount.Login = changeAccountDataDto.Login;
+            workerAccount.Password = changeAccountDataDto.Password;
+            workerAccount.Username = changeAccountDataDto.Username;
+
+            await _workerAccountRepository.Update(workerAccount);
         }
     }
 }

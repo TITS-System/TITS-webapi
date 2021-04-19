@@ -27,7 +27,7 @@ namespace Models.Db.Account
 
         public virtual WorkerSession LastWorkerSession { get; set; }
         
-        
+        public virtual ICollection<Delivery> Deliveries { get; set; }
         
         // public virtual ICollection<Order> CreatedOrders { get; set; }
     }

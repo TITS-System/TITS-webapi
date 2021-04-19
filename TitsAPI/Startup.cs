@@ -63,6 +63,7 @@ namespace TitsAPI
             services.AddScoped<IWorkerRoleService, WorkerRoleService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IWorkerSessionService, WorkerSessionService>();
+            services.AddScoped<IDeliveryService, DeliveryService>();
             
             services.AddAutoMapper(cfg => cfg.AddProfile(new TitsAutomapperProfile()));
 

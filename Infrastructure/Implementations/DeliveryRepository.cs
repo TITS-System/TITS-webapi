@@ -23,6 +23,11 @@ namespace Infrastructure.Implementations
             return await Context.Deliveries.Where(d => d.OrderId == orderId).ToListAsync();
         }
 
+        public async Task<ICollection<Delivery>> GetByCourierId(long courierId)
+        {
+            return await Context.Deliveries.Where(d => d.CourierAccountId == courierId).ToListAsync();
+        }
+
         public async Task Update(Delivery delivery)
         {
             Context.Deliveries.Update(delivery);

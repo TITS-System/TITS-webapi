@@ -39,7 +39,7 @@ namespace Services.Implementations
                 // Found an unclosed last session
                 var lastTokenSession = await _tokenSessionRepository.GetById(workerAccount.LastTokenSessionId.Value);
 
-                if (lastTokenSession.EndDate < DateTime.Now)
+                if (lastTokenSession.EndDate > DateTime.Now)
                 {
                     return new LoginResultDto(workerAccount.Id, lastTokenSession.Token);
                 }

@@ -38,7 +38,7 @@ namespace Services.Implementations
             await _latLngRepository.Insert(latLng);
 
             var order = _mapper.Map<Order>(createOrderDto);
-            
+
             // DestinationLatLng is ignored when mapping
             // Save entity with reference
             order.DestinationLatLngId = latLng.Id;
