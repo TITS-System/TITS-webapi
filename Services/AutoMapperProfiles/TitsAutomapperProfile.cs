@@ -2,6 +2,7 @@ using AutoMapper;
 using Models.Db;
 using Models.Db.Account;
 using Models.Dtos;
+using Models.DTOs.Misc;
 using Models.DTOs.Responses;
 using Models.DTOs.WorkerAccountDtos;
 
@@ -25,6 +26,12 @@ namespace Services.AutoMapperProfiles
                     dto => dto.DestinationLatLng,
                     cfg => cfg.Ignore())
                 .ReverseMap();
+
+            CreateMap<UnservedOrderDto, Order>().ReverseMap();
+
+            CreateMap<WorkerAccountDto, WorkerAccount>().ReverseMap();
+
+            CreateMap<RestaurantDto, Restaurant>().ReverseMap();
             
             CreateMap<LatLng, LatLngDto>().ReverseMap();
         }

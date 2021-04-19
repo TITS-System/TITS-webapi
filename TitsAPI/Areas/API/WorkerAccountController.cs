@@ -19,12 +19,14 @@ namespace TitsAPI.Areas.API
         private IWorkerAccountService _workerAccountService;
         private IWorkerRoleService _workerRoleService;
         private ITokenSessionService _tokenSessionService;
+        private IRestaurantService _restaurantService;
 
-        public WorkerAccountController(ITokenSessionService tokenSessionService, IWorkerAccountService workerAccountService, IWorkerRoleService workerRoleService) : base(tokenSessionService)
+        public WorkerAccountController(ITokenSessionService tokenSessionService, IWorkerAccountService workerAccountService, IWorkerRoleService workerRoleService, IRestaurantService restaurantService) : base(tokenSessionService)
         {
             _tokenSessionService = tokenSessionService;
             _workerAccountService = workerAccountService;
             _workerRoleService = workerRoleService;
+            _restaurantService = restaurantService;
         }
 
         [HttpPost]
@@ -130,5 +132,23 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
+        
+        
+        [HttpGet]
+        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        public async Task<ActionResult<GetCouriersResultDto>> GetCouriersByRestaurant(long restaurantId)
+        {
+            try
+            {
+                var getCouriersResultDto = await _restaurantService.GetCouriers(restaurantId);
+                return getCouriersResultDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+        
+        
     }
 }

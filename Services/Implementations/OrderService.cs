@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Abstractions;
 using Models.Db;
@@ -49,6 +50,22 @@ namespace Services.Implementations
             await _latLngRepository.Update(latLng);
 
             return new CreatedDto(order.Id);
+        }
+
+        public async Task<GetUnservedOrdersResultDto> GetUnserved(long restaurantId)
+        {
+            var restaurant = await _restaurantRepository.GetById(restaurantId);
+
+            if (restaurant == null)
+            {
+                throw new("Restaurant not found");
+            }
+
+            var orders = await _orderRepository.GetUnserved(restaurantId);
+
+            var unservedOrderDtos = _mapper.Map<ICollection<UnservedOrderDto>>(orders);
+
+            return new GetUnservedOrdersResultDto() {Orders = unservedOrderDtos};
         }
     }
 }

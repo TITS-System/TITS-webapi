@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Models.Db.Account;
 using Models.Enums;
@@ -13,6 +14,10 @@ namespace Models.Db
         public long OrderId { get; set; }
 
         public virtual Order Order { get; set; }
+
+        public DateTime StartTime { get; set; }
+        
+        public DateTime? EndTime { get; set; }
 
         // Delivery is only created, when courier takes an orderб, so it's never null
         [ForeignKey(nameof(CourierAccount))]

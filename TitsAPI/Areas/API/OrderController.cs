@@ -33,5 +33,22 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
+        
+        [HttpGet]
+        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        public async Task<ActionResult<GetUnservedOrdersResultDto>> GetUnserved(long restaurantId)
+        {
+            var tokenSession = await GetRequestSession();
+
+            try
+            {
+                var getUnservedOrdersResultDto = await _orderService.GetUnserved(restaurantId);
+                return getUnservedOrdersResultDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
     }
 }

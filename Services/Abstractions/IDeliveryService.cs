@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Models.Dtos;
 
 namespace Services.Abstractions
@@ -15,6 +16,6 @@ namespace Services.Abstractions
         
         Task CancelDelivery(long deliveryId);
 
-        Task<DeliveriesDto> GetAllByCourier(long courierId);
+        Task<DeliveriesDto> GetByCourierAndDate(GetByCourierAndDateDto getByCourierAndDateDto);
     }
 }

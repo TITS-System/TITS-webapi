@@ -62,13 +62,13 @@ namespace TitsAPI.Areas.API
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [TypeFilter(typeof(CheckAuthTokenFilter))]
-        public async Task<ActionResult<DeliveriesDto>> GetByCourier(long courierId)
+        public async Task<ActionResult<DeliveriesDto>> GetByCourierAndDates(GetByCourierAndDateDto getByCourierAndDateDto)
         {
             try
             {
-                var deliveriesDto = await _deliveryService.GetAllByCourier(courierId);
+                var deliveriesDto = await _deliveryService.GetByCourierAndDate(getByCourierAndDateDto);
                 return deliveriesDto;
             }
             catch (Exception ex)

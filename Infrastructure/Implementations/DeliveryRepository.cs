@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Infrastructure.Abstractions;
@@ -23,9 +24,9 @@ namespace Infrastructure.Implementations
             return await Context.Deliveries.Where(d => d.OrderId == orderId).ToListAsync();
         }
 
-        public async Task<ICollection<Delivery>> GetByCourierId(long courierId)
+        public async Task<ICollection<Delivery>> GetByCourierIdAndDate(long courierId, DateTime startTime, DateTime endTime)
         {
-            return await Context.Deliveries.Where(d => d.CourierAccountId == courierId).ToListAsync();
+            return await Context.Deliveries.Where(d => d.CourierAccountId == courierId && d.EndTime > startTime && d.EndTime < endTime).ToListAsync();
         }
 
         public async Task Update(Delivery delivery)

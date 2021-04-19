@@ -12,6 +12,8 @@ namespace Models.Db
 
         public virtual LatLng LocationLatLng { get; set; }
 
+        public string AddressString { get; set; }
+
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

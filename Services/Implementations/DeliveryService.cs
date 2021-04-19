@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -56,7 +57,8 @@ namespace Services.Implementations
             {
                 CourierAccount = workerAccount,
                 Order = order,
-                Status = DeliveryStatus.InProgress
+                Status = DeliveryStatus.InProgress,
+                StartTime = DateTime.Now
             };
 
             await _deliveryRepository.Insert(delivery);
@@ -65,7 +67,7 @@ namespace Services.Implementations
         public async Task<LatLngsDto> GetDeliveryLocations(long deliveryId)
         {
             var delivery = await _deliveryRepository.GetById(deliveryId);
-            
+
             if (delivery == null)
             {
                 throw new("Delivery no found");
@@ -101,6 +103,7 @@ namespace Services.Implementations
             }
 
             delivery.Status = DeliveryStatus.Finished;
+            delivery.EndTime = DateTime.Now;
             await _deliveryRepository.Update(delivery);
         }
 
@@ -114,19 +117,24 @@ namespace Services.Implementations
             }
 
             delivery.Status = DeliveryStatus.Canceled;
+            delivery.EndTime = DateTime.Now;
             await _deliveryRepository.Update(delivery);
         }
 
-        public async Task<DeliveriesDto> GetAllByCourier(long courierId)
+        public async Task<DeliveriesDto> GetByCourierAndDate(GetByCourierAndDateDto getByCourierAndDateDto)
         {
-            var workerAccount = await _workerAccountRepository.GetById(courierId);
+            var workerAccount = await _workerAccountRepository.GetById(getByCourierAndDateDto.CourierId);
 
             if (workerAccount == null)
             {
                 throw new(MessagesVerbatim.AccountNotFound);
             }
 
-            var deliveries = await _deliveryRepository.GetByCourierId(courierId);
+            var deliveries = await _deliveryRepository.GetByCourierIdAndDate(
+                getByCourierAndDateDto.CourierId,
+                getByCourierAndDateDto.StartTime,
+                getByCourierAndDateDto.EndTime
+            );
 
             var deliveryDtos = deliveries.Select(d => new DeliveryDto(d.OrderId, d.CourierAccountId)).ToList();
 

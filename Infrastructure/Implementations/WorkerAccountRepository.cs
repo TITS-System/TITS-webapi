@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Infrastructure.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +21,11 @@ namespace Infrastructure.Implementations
         public async Task<WorkerAccount> GetByLogin(string login)
         {
             return await Context.WorkerAccounts.FirstOrDefaultAsync(wa=>wa.Login == login);
+        }
+
+        public async Task<ICollection<WorkerAccount>> GetByRestaurant(long restaurantId)
+        {
+            return await Context.WorkerAccounts.Where(wa => wa.MainRestaurantId == restaurantId).ToListAsync();
         }
 
         public async Task Update(WorkerAccount workerAccount)

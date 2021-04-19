@@ -7,5 +7,7 @@ namespace Services.Abstractions
     public interface IOrderService
     {
         Task<CreatedDto> Create(CreateOrderDto createOrderDto);
+
+        Task<GetUnservedOrdersResultDto> GetUnserved(long restaurantId);
     }
 }

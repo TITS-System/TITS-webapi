@@ -58,7 +58,7 @@ namespace Seeder
             await _latLngRepository.Insert(latLng);
             
             // Save it with a relation
-            var restaurant = new Restaurant() {LocationLatLngId = latLng.Id};
+            var restaurant = new Restaurant() {LocationLatLngId = latLng.Id, AddressString = "Карла Маркса д.1"};
             await _restaurantRepository.Insert(restaurant);
             
             // Save back reference id

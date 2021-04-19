@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Models.Db;
 
@@ -10,7 +11,7 @@ namespace Infrastructure.Abstractions
         
         Task<ICollection<Delivery>> GetByOrderId(long orderId);
         
-        Task<ICollection<Delivery>> GetByCourierId(long courierId);
+        Task<ICollection<Delivery>> GetByCourierIdAndDate(long courierId, DateTime startTime, DateTime endTime);
 
         Task Update(Delivery delivery);
 

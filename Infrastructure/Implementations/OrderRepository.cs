@@ -1,6 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Infrastructure.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using Models.Db;
+using Models.Enums;
 
 namespace Infrastructure.Implementations
 {
@@ -13,6 +17,16 @@ namespace Infrastructure.Implementations
         public async Task<Order> GetById(long id)
         {
             return await Context.Orders.FindAsync(id);
+        }
+
+        public async Task<ICollection<Order>> GetUnserved(long restaurantId)
+        {
+            return await Context.Orders
+                .Where(o =>
+                    o.Deliveries.All(d => d.Status != DeliveryStatus.Finished) &&
+                    o.RestaurantId == restaurantId
+                )
+                .ToListAsync();
         }
 
         public async Task Update(Order order)
