@@ -51,6 +51,13 @@ namespace TitsAPI.Areas.API
 
                 await _workerRoleService.AddToRole(createdDto.Id, WorkerRolesVerbatim.Courier);
 
+                await _workerAccountService.AssignToRestaurant(
+                    new ()
+                    {
+                        WorkerId = createdDto.Id,
+                        RestaurantId = createWorkerAccountDto.RestaurantId
+                    });
+
                 return createdDto;
             }
             catch (Exception ex)
@@ -58,16 +65,18 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
-        
+
         [HttpPost]
         public async Task<ActionResult<CreatedDto>> CreateManager([FromBody] CreateWorkerAccountDto createWorkerAccountDto)
         {
             try
             {
                 var createdDto = await _workerAccountService.CreateAccount(createWorkerAccountDto);
-                
+
                 await _workerRoleService.AddToRole(createdDto.Id, WorkerRolesVerbatim.Manager);
 
+                // We don't assign manager to restaurant, because he can manipulate many at once
+                
                 return createdDto;
             }
             catch (Exception ex)

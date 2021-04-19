@@ -7,5 +7,7 @@ namespace Models.DTOs.WorkerAccountDtos
         public string Password { get; set; }
 
         public string Username { get; set; }
+
+        public long RestaurantId { get; set; }
     }
 }
