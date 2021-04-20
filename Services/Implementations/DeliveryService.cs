@@ -16,16 +16,16 @@ namespace Services.Implementations
     {
         private IOrderRepository _orderRepository;
         private IDeliveryRepository _deliveryRepository;
-        private IWorkerAccountRepository _workerAccountRepository;
+        private ICourierAccountRepository _courierAccountRepository;
         private ILatLngRepository _latLngRepository;
 
         private IMapper _mapper;
 
-        public DeliveryService(IOrderRepository orderRepository, IDeliveryRepository deliveryRepository, IWorkerAccountRepository workerAccountRepository, ILatLngRepository latLngRepository, IMapper mapper)
+        public DeliveryService(IOrderRepository orderRepository, IDeliveryRepository deliveryRepository, ICourierAccountRepository courierAccountRepository, ILatLngRepository latLngRepository, IMapper mapper)
         {
             _orderRepository = orderRepository;
             _deliveryRepository = deliveryRepository;
-            _workerAccountRepository = workerAccountRepository;
+            _courierAccountRepository = courierAccountRepository;
             _latLngRepository = latLngRepository;
             _mapper = mapper;
         }
@@ -46,16 +46,16 @@ namespace Services.Implementations
                 throw new("Delivery for this order is already in progress");
             }
 
-            var workerAccount = await _workerAccountRepository.GetById(beginDeliveryDto.CourierId);
+            var courierAccount = await _courierAccountRepository.GetById(beginDeliveryDto.CourierId);
 
-            if (workerAccount == null)
+            if (courierAccount == null)
             {
                 throw new(MessagesVerbatim.AccountNotFound);
             }
 
             var delivery = new Delivery()
             {
-                CourierAccount = workerAccount,
+                CourierAccount = courierAccount,
                 Order = order,
                 Status = DeliveryStatus.InProgress,
                 StartTime = DateTime.Now
@@ -123,9 +123,9 @@ namespace Services.Implementations
 
         public async Task<DeliveriesDto> GetByCourierAndDate(GetByCourierAndDateDto getByCourierAndDateDto)
         {
-            var workerAccount = await _workerAccountRepository.GetById(getByCourierAndDateDto.CourierId);
+            var courierAccount = await _courierAccountRepository.GetById(getByCourierAndDateDto.CourierId);
 
-            if (workerAccount == null)
+            if (courierAccount == null)
             {
                 throw new(MessagesVerbatim.AccountNotFound);
             }

@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Infrastructure.Abstractions;
 using Infrastructure.Verbatims;
-using Models.Db.Sessions;
+using Models.Db.TokenSessions;
 using Models.Dtos;
 using Models.DTOs.Requests;
 using Services.Abstractions;
@@ -11,37 +11,41 @@ namespace Services.Implementations
 {
     public class TokenSessionService : ITokenSessionService
     {
-        private ITokenSessionRepository _tokenSessionRepository;
-        private IWorkerAccountRepository _workerAccountRepository;
+        private ICourierTokenSessionRepository _courierTokenSessionRepository;
+        private IManagerTokenSessionRepository _managerTokenSessionRepository;
+        private ICourierAccountRepository _courierAccountRepository;
+        private IManagerAccountRepository _managerAccountRepository;
 
-        public TokenSessionService(ITokenSessionRepository tokenSessionRepository, IWorkerAccountRepository workerAccountRepository)
+        public TokenSessionService(ICourierTokenSessionRepository courierTokenSessionRepository, IManagerTokenSessionRepository managerTokenSessionRepository, ICourierAccountRepository courierAccountRepository, IManagerAccountRepository managerAccountRepository)
         {
-            _tokenSessionRepository = tokenSessionRepository;
-            _workerAccountRepository = workerAccountRepository;
+            _courierTokenSessionRepository = courierTokenSessionRepository;
+            _managerTokenSessionRepository = managerTokenSessionRepository;
+            _courierAccountRepository = courierAccountRepository;
+            _managerAccountRepository = managerAccountRepository;
         }
 
-        public async Task<LoginResultDto> Login(LoginDto loginDto)
+        public async Task<LoginResultDto> LoginCourier(LoginDto loginDto)
         {
-            var workerAccount = await _workerAccountRepository.GetByLogin(loginDto.Login);
+            var courierAccount = await _courierAccountRepository.GetByLogin(loginDto.Login);
 
-            if (workerAccount == null)
+            if (courierAccount == null)
             {
                 throw new(MessagesVerbatim.AccountNotFound);
             }
 
-            if (workerAccount.Password != loginDto.Password)
+            if (courierAccount.Password != loginDto.Password)
             {
                 throw new(MessagesVerbatim.PasswordInvalid);
             }
 
-            if (workerAccount.LastTokenSessionId != null)
+            if (courierAccount.LastTokenSessionId != null)
             {
                 // Found an unclosed last session
-                var lastTokenSession = await _tokenSessionRepository.GetById(workerAccount.LastTokenSessionId.Value);
+                var lastTokenSession = await _courierTokenSessionRepository.GetById(courierAccount.LastTokenSessionId.Value);
 
                 if (lastTokenSession.EndDate > DateTime.Now)
                 {
-                    return new LoginResultDto(workerAccount.Id, lastTokenSession.Token);
+                    return new LoginResultDto(courierAccount.Id, lastTokenSession.Token);
                 }
                 
                 // Don't close old session, it's automatically expired by EndDate
@@ -51,32 +55,91 @@ namespace Services.Implementations
 
             var endDate = DateTime.Now.AddMinutes(10);
 
-            TokenSession session = new()
+            CourierTokenSession session = new()
             {
-                WorkerAccount = workerAccount,
+                CourierAccount = courierAccount,
                 Token = Guid.NewGuid().ToString(),
                 StartDate = DateTime.Now,
                 EndDate = endDate
             };
 
-            await _tokenSessionRepository.Insert(session);
+            await _courierTokenSessionRepository.Insert(session);
 
             // Save token session in user
-            workerAccount.LastTokenSessionId = session.Id;
-            await _workerAccountRepository.Update(workerAccount);
+            courierAccount.LastTokenSessionId = session.Id;
+            await _courierAccountRepository.Update(courierAccount);
 
-            return new LoginResultDto(workerAccount.Id, session.Token);
+            return new LoginResultDto(courierAccount.Id, session.Token);
         }
 
-        public async Task<TokenSession> GetByToken(string token)
+        public async Task<LoginResultDto> LoginManager(LoginDto loginDto)
         {
-            return await _tokenSessionRepository.GetByToken(token);
+            var managerAccount = await _managerAccountRepository.GetByLogin(loginDto.Login);
+
+            if (managerAccount == null)
+            {
+                throw new(MessagesVerbatim.AccountNotFound);
+            }
+
+            if (managerAccount.Password != loginDto.Password)
+            {
+                throw new(MessagesVerbatim.PasswordInvalid);
+            }
+
+            if (managerAccount.LastTokenSessionId != null)
+            {
+                // Found an unclosed last session
+                var lastTokenSession = await _managerTokenSessionRepository.GetById(managerAccount.LastTokenSessionId.Value);
+
+                if (lastTokenSession.EndDate > DateTime.Now)
+                {
+                    return new LoginResultDto(managerAccount.Id, lastTokenSession.Token);
+                }
+                
+                // Don't close old session, it's automatically expired by EndDate
+            }
+
+            // Create new Token Session
+
+            var endDate = DateTime.Now.AddMinutes(10);
+
+            ManagerTokenSession session = new()
+            {
+                ManagerAccount = managerAccount,
+                Token = Guid.NewGuid().ToString(),
+                StartDate = DateTime.Now,
+                EndDate = endDate
+            };
+
+            await _managerTokenSessionRepository.Insert(session);
+
+            // Save token session in user
+            managerAccount.LastTokenSessionId = session.Id;
+            await _managerAccountRepository.Update(managerAccount);
+
+            return new LoginResultDto(managerAccount.Id, session.Token);
         }
 
-        public async Task Logout(TokenSession tokenSession)
+        public async Task<CourierTokenSession> GetCourierSessionByToken(string token)
         {
-            tokenSession.EndDate = DateTime.Now;
-            await _tokenSessionRepository.Update(tokenSession);
+            return await _courierTokenSessionRepository.GetByToken(token);
+        }
+
+        public async Task<ManagerTokenSession> GetManagerSessionByToken(string token)
+        {
+            return await _managerTokenSessionRepository.GetByToken(token);
+        }
+
+        public async Task Logout(CourierTokenSession courierTokenSession)
+        {
+            courierTokenSession.EndDate = DateTime.Now;
+            await _courierTokenSessionRepository.Update(courierTokenSession);
+        }
+
+        public async Task Logout(ManagerTokenSession managerTokenSession)
+        {
+            managerTokenSession.EndDate = DateTime.Now;
+            await _managerTokenSessionRepository.Update(managerTokenSession);
         }
     }
 }

@@ -21,28 +21,28 @@ namespace Infrastructure.Implementations
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<WorkerAccount>> GetRoleWorkers(long roleId)
+        public async Task<IEnumerable<CourierAccount>> GetRoleWorkers(long roleId)
         {
             return await Context.WorkerAccountToRoles
                 .Where(watr => watr.WorkerRoleId == roleId)
-                .Select(watr => watr.WorkerAccount)
+                .Select(watr => watr.CourierAccount)
                 .ToListAsync();
         }
 
-        public async Task<WorkerAccountToRole> GetPair(long workerId, long roleId)
+        public async Task<AccountToRole> GetPair(long workerId, long roleId)
         {
             return await Context.WorkerAccountToRoles.FirstOrDefaultAsync(watr => watr.WorkerAccountId == workerId && watr.WorkerRoleId == roleId);
         }
 
-        public async Task Insert(WorkerAccountToRole workerAccountToRole)
+        public async Task Insert(AccountToRole accountToRole)
         {
-            Context.WorkerAccountToRoles.Add(workerAccountToRole);
+            Context.WorkerAccountToRoles.Add(accountToRole);
             await Context.SaveChangesAsync();
         }
 
-        public async Task Remove(WorkerAccountToRole workerAccountToRole)
+        public async Task Remove(AccountToRole accountToRole)
         {
-            Context.WorkerAccountToRoles.Remove(workerAccountToRole);
+            Context.WorkerAccountToRoles.Remove(accountToRole);
             await Context.SaveChangesAsync();
         }
     }

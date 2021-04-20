@@ -18,11 +18,9 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpPost]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        [TypeFilter(typeof(ManagerTokenFilter))]
         public async Task<ActionResult<CreatedDto>> Create([FromBody] CreateOrderDto createOrderDto)
         {
-            var tokenSession = await GetRequestSession();
-
             try
             {
                 var createdDto = await _orderService.Create(createOrderDto);
@@ -35,11 +33,9 @@ namespace TitsAPI.Areas.API
         }
         
         [HttpGet]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult<GetUnservedOrdersResultDto>> GetUnserved(long restaurantId)
         {
-            var tokenSession = await GetRequestSession();
-
             try
             {
                 var getUnservedOrdersResultDto = await _orderService.GetUnserved(restaurantId);

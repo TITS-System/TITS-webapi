@@ -6,14 +6,14 @@ using Models.DTOs.WorkerAccountDtos;
 
 namespace Services.Abstractions
 {
-    public interface IWorkerAccountService
+    public interface ICourierAccountService
     {
-        Task<CreatedDto> CreateAccount(CreateWorkerAccountDto createWorkerAccountDto);
+        Task<CreatedDto> CreateCourier(CreateCourierAccountDto createCourierAccountDto);
         
         Task AssignToRestaurant(AssignToRestaurantDto assignToRestaurantDto);
 
-        Task<GetRolesResultDto> GetRoles(long workerId);
+        Task<GetRolesResultDto> GetRoles(long courierId);
 
-        Task ChangeAccountData(ChangeAccountDataDto changeAccountDataDto);
+        Task ChangeCourierData(ChangeAccountDataDto changeAccountDataDto);
     }
 }

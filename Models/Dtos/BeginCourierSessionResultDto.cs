@@ -1,10 +1,10 @@
 namespace Models.DTOs
 {
-    public class BeginWorkSessionResultDto
+    public class BeginCourierSessionResultDto
     {
         public long WorkSessionId { get; set; }
 
-        public BeginWorkSessionResultDto(long workSessionId)
+        public BeginCourierSessionResultDto(long workSessionId)
         {
             WorkSessionId = workSessionId;
         }

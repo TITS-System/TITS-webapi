@@ -4,7 +4,7 @@ using Models.Db.Account;
 
 namespace Models.Db
 {
-    public class WorkerSession
+    public class CourierSession
     {
         public long Id { get; set; }
 
@@ -18,14 +18,9 @@ namespace Models.Db
         // This is an actual time, when session was closed by user
         public DateTime? CloseDateTime { get; set; }
 
-        [ForeignKey(nameof(WorkerAccount))]
-        public long WorkerAccountId { get; set; }
+        [ForeignKey(nameof(CourierAccount))]
+        public long CourierAccountId { get; set; }
         
-        public virtual WorkerAccount WorkerAccount { get; set; }
-
-        [ForeignKey(nameof(Restaurant))]
-        public long RestaurantId { get; set; }
-
-        public virtual Restaurant Restaurant { get; set; }
+        public virtual CourierAccount CourierAccount { get; set; }
     }
 }

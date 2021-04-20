@@ -18,7 +18,7 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpPost]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult> Begin([FromBody] BeginDeliveryDto beginDeliveryDto)
         {
             try
@@ -33,7 +33,7 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpGet]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult> Finish(long deliveryId)
         {
             try
@@ -48,7 +48,7 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpGet]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult> Cancel(long deliveryId)
         {
             try
@@ -63,7 +63,7 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpPost]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult<DeliveriesDto>> GetByCourierAndDates(GetByCourierAndDateDto getByCourierAndDateDto)
         {
             try
@@ -78,7 +78,7 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpGet]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult<LatLngsDto>> GetLocations(long deliveryId)
         {
             try
@@ -93,7 +93,7 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpPost]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult> AddLocation([FromBody] AddDeliveryLocationDto addDeliveryLocationDto)
         {
             try

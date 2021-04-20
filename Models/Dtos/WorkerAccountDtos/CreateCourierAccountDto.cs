@@ -1,13 +1,13 @@
-﻿namespace Models.Dtos
+namespace Models.DTOs.WorkerAccountDtos
 {
-    public class ChangeAccountDataDto
+    public class CreateCourierAccountDto
     {
-        public long CourierId { get; set; }
-
         public string Login { get; set; }
 
         public string Password { get; set; }
 
         public string Username { get; set; }
+
+        public long RestaurantId { get; set; }
     }
 }

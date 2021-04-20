@@ -8,12 +8,12 @@ namespace Infrastructure.Abstractions
     {
         Task<IEnumerable<WorkerRole>> GetWorkerRoles(long workerId);
         
-        Task<IEnumerable<WorkerAccount>> GetRoleWorkers(long roleId);
+        Task<IEnumerable<CourierAccount>> GetRoleWorkers(long roleId);
 
-        Task<WorkerAccountToRole> GetPair(long workerId, long roleId);
+        Task<AccountToRole> GetPair(long workerId, long roleId);
 
-        Task Insert(WorkerAccountToRole workerAccountToRole);
+        Task Insert(AccountToRole accountToRole);
         
-        Task Remove(WorkerAccountToRole workerAccountToRole);
+        Task Remove(AccountToRole accountToRole);
     }
 }

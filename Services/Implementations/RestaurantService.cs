@@ -10,14 +10,14 @@ namespace Services.Implementations
     public class RestaurantService : IRestaurantService
     {
         private IRestaurantRepository _restaurantRepository;
-        private IWorkerAccountRepository _workerAccountRepository;
+        private ICourierAccountRepository _courierAccountRepository;
         private IMapper _mapper;
 
-        public RestaurantService(IRestaurantRepository restaurantRepository, IMapper mapper, IWorkerAccountRepository workerAccountRepository)
+        public RestaurantService(IRestaurantRepository restaurantRepository, ICourierAccountRepository courierAccountRepository, IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
+            _courierAccountRepository = courierAccountRepository;
             _mapper = mapper;
-            _workerAccountRepository = workerAccountRepository;
         }
 
         public async Task<GetCouriersResultDto> GetCouriers(long restaurantId)
@@ -29,9 +29,9 @@ namespace Services.Implementations
                 throw new("Restaurant not found");
             }
 
-            var couriers = await _workerAccountRepository.GetByRestaurant(restaurantId);
+            var courierAccounts = await _courierAccountRepository.GetByRestaurant(restaurantId);
 
-            var workerAccountDtos = _mapper.Map<ICollection<WorkerAccountDto>>(couriers);
+            var workerAccountDtos = _mapper.Map<ICollection<WorkerAccountDto>>(courierAccounts);
             return new GetCouriersResultDto(workerAccountDtos);
         }
 

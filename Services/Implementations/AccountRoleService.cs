@@ -7,9 +7,9 @@ using Services.Abstractions;
 
 namespace Services.Implementations
 {
-    public class WorkerRoleService : IWorkerRoleService
+    public class AccountRoleService : IAccountRoleService
     {
-        private IWorkerAccountRepository _workerAccountRepository;
+        private IAccountRepository _accountRepository;
 
         private IWorkerRoleRepository _workerRoleRepository;
 
@@ -17,19 +17,19 @@ namespace Services.Implementations
 
         private IMapper _mapper;
 
-        public WorkerRoleService(IWorkerAccountRepository workerAccountRepository, IWorkerRoleRepository workerRoleRepository, IWorkerToRoleRepository workerToRoleRepository, IMapper mapper)
+        public AccountRoleService(IAccountRepository accountRepository, IWorkerRoleRepository workerRoleRepository, IWorkerToRoleRepository workerToRoleRepository, IMapper mapper)
         {
-            _workerAccountRepository = workerAccountRepository;
+            _accountRepository = accountRepository;
             _workerRoleRepository = workerRoleRepository;
             _workerToRoleRepository = workerToRoleRepository;
             _mapper = mapper;
         }
 
-        public async Task AddToRole(long workerId, long roleId)
+        public async Task AddToRole(long accountId, long roleId)
         {
-            var workerAccount = await _workerAccountRepository.GetById(workerId);
+            var account = await _accountRepository.GetById(accountId);
 
-            if (workerAccount == null)
+            if (account == null)
             {
                 throw new(MessagesVerbatim.AccountNotFound);
             }
@@ -41,18 +41,18 @@ namespace Services.Implementations
                 throw new("Role not found");
             }
 
-            WorkerAccountToRole workerAccountToRole = new WorkerAccountToRole()
+            AccountToRole accountToRole = new AccountToRole()
             {
-                WorkerAccountId = workerId,
+                WorkerAccountId = accountId,
                 WorkerRoleId = role.Id
             };
 
-            await _workerToRoleRepository.Insert(workerAccountToRole);
+            await _workerToRoleRepository.Insert(accountToRole);
         }
 
-        public async Task AddToRole(long workerId, string roleTitleEn)
+        public async Task AddToRole(long accountId, string roleTitleEn)
         {
-            var workerAccount = await _workerAccountRepository.GetById(workerId);
+            var workerAccount = await _accountRepository.GetById(accountId);
 
             if (workerAccount == null)
             {
@@ -66,18 +66,18 @@ namespace Services.Implementations
                 throw new("Role not found");
             }
 
-            WorkerAccountToRole workerAccountToRole = new WorkerAccountToRole()
+            AccountToRole accountToRole = new AccountToRole()
             {
-                WorkerAccountId = workerId,
+                WorkerAccountId = accountId,
                 WorkerRoleId = role.Id
             };
 
-            await _workerToRoleRepository.Insert(workerAccountToRole);
+            await _workerToRoleRepository.Insert(accountToRole);
         }
 
-        public async Task RemoveFromRole(long workerId, long roleId)
+        public async Task RemoveFromRole(long accountId, long roleId)
         {
-            var workerAccount = await _workerAccountRepository.GetById(workerId);
+            var workerAccount = await _accountRepository.GetById(accountId);
 
             if (workerAccount == null)
             {
@@ -91,7 +91,7 @@ namespace Services.Implementations
                 throw new("Role not found");
             }
 
-            var workerAccountToRole = await _workerToRoleRepository.GetPair(workerId, roleId);
+            var workerAccountToRole = await _workerToRoleRepository.GetPair(accountId, roleId);
 
             if (workerAccountToRole == null)
             {
@@ -101,9 +101,9 @@ namespace Services.Implementations
             await _workerToRoleRepository.Remove(workerAccountToRole);
         }
 
-        public async Task RemoveFromRole(long workerId, string roleTitleEn)
+        public async Task RemoveFromRole(long accountId, string roleTitleEn)
         {
-            var workerAccount = await _workerAccountRepository.GetById(workerId);
+            var workerAccount = await _accountRepository.GetById(accountId);
 
             if (workerAccount == null)
             {

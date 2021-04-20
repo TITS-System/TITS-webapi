@@ -17,15 +17,29 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpGet]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
+        [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult<RestaurantDto>> GetInfo(long restaurantId)
         {
-            var tokenSession = await GetRequestSession();
-
             try
             {
                 var restaurantDto = await _restaurantService.GetInfo(restaurantId);
                 return restaurantDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+        
+
+        [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<GetCouriersResultDto>> GetCouriers(long restaurantId)
+        {
+            try
+            {
+                var getCouriersResultDto = await _restaurantService.GetCouriers(restaurantId);
+                return getCouriersResultDto;
             }
             catch (Exception ex)
             {

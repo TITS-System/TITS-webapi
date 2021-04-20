@@ -11,22 +11,20 @@ namespace TitsAPI.Areas.API
 {
     public class WorkerSessionController : TitsController
     {
-        private IWorkerSessionService _workerSessionService;
+        private ICourierSessionService _courierSessionService;
 
-        public WorkerSessionController(ITokenSessionService tokenSessionService, IWorkerSessionService workerSessionService) : base(tokenSessionService)
+        public WorkerSessionController(ITokenSessionService tokenSessionService, ICourierSessionService courierSessionService) : base(tokenSessionService)
         {
-            _workerSessionService = workerSessionService;
+            _courierSessionService = courierSessionService;
         }
 
         [HttpGet]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
-        public async Task<ActionResult<BeginWorkSessionResultDto>> Begin()
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<BeginCourierSessionResultDto>> Begin(long courierId)
         {
-            var tokenSession = await GetRequestSession();
-
             try
             {
-                var beginWorkSessionResultDto = await _workerSessionService.Begin(tokenSession.WorkerAccountId);
+                var beginWorkSessionResultDto = await _courierSessionService.Begin(courierId);
 
                 return beginWorkSessionResultDto;
             }
@@ -37,14 +35,12 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpGet]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
-        public async Task<ActionResult<MessageDto>> Close()
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<MessageDto>> Close(long courierId)
         {
-            var tokenSession = await GetRequestSession();
-
             try
             {
-                await _workerSessionService.Close(tokenSession.WorkerAccountId);
+                await _courierSessionService.Close(courierId);
 
                 return Ok();
             }
@@ -55,14 +51,12 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpGet]
-        [TypeFilter(typeof(CheckAuthTokenFilter))]
-        public async Task<ActionResult<TimeDto>> GetCurrentWorkerSessionDuration()
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<TimeDto>> GetCourierSessionDuration(long courierId)
         {
-            var tokenSession = await GetRequestSession();
-
             try
             {
-                var workSessionDurationDto = await _workerSessionService.GetCurrentWorkerSessionDuration(tokenSession.WorkerAccountId);
+                var workSessionDurationDto = await _courierSessionService.GetDuration(courierId);
 
                 return workSessionDurationDto;
             }

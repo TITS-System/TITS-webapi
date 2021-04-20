@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Models.Db.Sessions;
+using Models.Db.TokenSessions;
 using Models.Dtos;
 using Models.DTOs.Requests;
 
@@ -7,10 +7,16 @@ namespace Services.Abstractions
 {
     public interface ITokenSessionService
     {
-        Task<LoginResultDto> Login(LoginDto loginDto);
+        Task<LoginResultDto> LoginCourier(LoginDto loginDto);
+        
+        Task<LoginResultDto> LoginManager(LoginDto loginDto);
 
-        Task<TokenSession> GetByToken(string token);
+        Task<CourierTokenSession> GetCourierSessionByToken(string token);
+        
+        Task<ManagerTokenSession> GetManagerSessionByToken(string token);
 
-        Task Logout(TokenSession tokenSession);
+        Task Logout(CourierTokenSession courierTokenSession);
+        
+        Task Logout(ManagerTokenSession managerTokenSession);
     }
 }

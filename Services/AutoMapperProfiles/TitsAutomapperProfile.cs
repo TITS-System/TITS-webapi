@@ -19,7 +19,8 @@ namespace Services.AutoMapperProfiles
             // ReverseMap() нужен для обратной конвертации любого мапа
 
             CreateMap<WorkerRoleDto, WorkerRole>().ReverseMap();
-            CreateMap<CreateWorkerAccountDto, WorkerAccount>().ReverseMap();
+            CreateMap<CreateCourierAccountDto, CourierAccount>().ReverseMap();
+            CreateMap<CreateManagerAccountDto, ManagerAccount>().ReverseMap();
 
             CreateMap<CreateOrderDto, Order>()
                 .ForMember(
@@ -29,7 +30,7 @@ namespace Services.AutoMapperProfiles
 
             CreateMap<UnservedOrderDto, Order>().ReverseMap();
 
-            CreateMap<WorkerAccountDto, WorkerAccount>().ReverseMap();
+            CreateMap<WorkerAccountDto, CourierAccount>().ReverseMap();
 
             CreateMap<RestaurantDto, Restaurant>().ReverseMap();
             

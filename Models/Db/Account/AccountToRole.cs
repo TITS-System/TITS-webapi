@@ -2,12 +2,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models.Db.Account
 {
-    public class WorkerAccountToRole
+    public class AccountToRole
     {
-        [ForeignKey(nameof(WorkerAccount))]
+        [ForeignKey(nameof(CourierAccount))]
         public long WorkerAccountId { get; set; }
 
-        public virtual WorkerAccount WorkerAccount { get; set; }
+        public virtual CourierAccount CourierAccount { get; set; }
 
         [ForeignKey(nameof(WorkerRole))]
         public long WorkerRoleId { get; set; }

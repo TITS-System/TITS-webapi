@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Models.Db.Account;
 
 namespace Models.Db
 {
@@ -15,5 +16,7 @@ namespace Models.Db
         public string AddressString { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
+
+        public virtual ICollection<CourierAccount> AssignedCouriers { get; set; }
     }
 }

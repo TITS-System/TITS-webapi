@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Models.Db;
 using Models.Db.Account;
-using Models.Db.Sessions;
+using Models.Db.TokenSessions;
 
 namespace Infrastructure
 {
@@ -30,15 +30,21 @@ namespace Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<WorkerAccountToRole>().HasKey(atr => new {atr.WorkerRoleId, atr.WorkerAccountId});
+            modelBuilder.Entity<AccountToRole>().HasKey(atr => new {atr.WorkerRoleId, atr.WorkerAccountId});
             // modelBuilder.Entity<LatLng>().HasOne(atr => atr.Order).WithOne(o => o.DestinationLatLng).IsRequired(false).HasForeignKey<LatLng>(latlng => latlng.OrderId);
             // modelBuilder.Entity<LatLng>().HasOne(atr => atr.Restaurant).WithOne(r => r.LocationLatLng).IsRequired(false).HasForeignKey<LatLng>(latlng => latlng.RestaurantId);
             // modelBuilder.Entity<LatLng>().HasOne(atr => atr.Delivery).WithMany(d => d.LatLngs).IsRequired(false).HasForeignKey(latlng => latlng.DeliveryId);
         }
 
-        public DbSet<WorkerAccount> WorkerAccounts { get; set; }
-        public DbSet<TokenSession> TokenSessions { get; set; }
-        public DbSet<WorkerAccountToRole> WorkerAccountToRoles { get; set; }
+        public DbSet<AccountBase> Accounts { get; set; }
+        public DbSet<CourierAccount> CourierAccounts { get; set; }
+        public DbSet<ManagerAccount> ManagerAccounts { get; set; }
+        
+        public DbSet<TokenSessionBase> TokenSessions { get; set; }
+        public DbSet<CourierTokenSession> CourierTokenSessions { get; set; }
+        public DbSet<ManagerTokenSession> ManagerTokenSessions { get; set; }
+        
+        public DbSet<AccountToRole> WorkerAccountToRoles { get; set; }
         public DbSet<WorkerRole> WorkerRoles { get; set; }
 
         public DbSet<Order> Orders { get; set; }
@@ -47,6 +53,6 @@ namespace Infrastructure
         public DbSet<LatLng> LatLngs { get; set; }
         public DbSet<Restaurant> Restaurants { get; set; }
 
-        public DbSet<WorkerSession> WorkerSessions { get; set; }
+        public DbSet<CourierSession> WorkerSessions { get; set; }
     }
 }

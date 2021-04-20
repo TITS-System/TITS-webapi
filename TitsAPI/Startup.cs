@@ -47,25 +47,27 @@ namespace TitsAPI
             services.AddDbContext<TitsDbContext>();
 
             // Add Repositories
-            services.AddScoped<ITokenSessionRepository, TokenSessionRepository>();
-            services.AddScoped<IWorkerAccountRepository, WorkerAccountRepository>();
+            services.AddScoped<ICourierTokenSessionRepository, CourierTokenSessionRepository>();
+            services.AddScoped<ICourierAccountRepository, CourierAccountRepository>();
+            services.AddScoped<IManagerAccountRepository, ManagerAccountRepository>();
             services.AddScoped<IWorkerRoleRepository, WorkerRoleRepository>();
             services.AddScoped<IWorkerToRoleRepository, WorkerToRoleRepository>();
             services.AddScoped<IDeliveryRepository, DeliveryRepository>();
             services.AddScoped<ILatLngRepository, LatLngRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
-            services.AddScoped<IWorkerSessionRepository, WorkerSessionRepository>();
+            services.AddScoped<ICourierSessionRepository, CourierSessionRepository>();
 
             // Add Services
             services.AddScoped<ITokenSessionService, TokenSessionService>();
-            services.AddScoped<IWorkerAccountService, WorkerAccountService>();
-            services.AddScoped<IWorkerRoleService, WorkerRoleService>();
+            services.AddScoped<ICourierAccountService, CourierAccountService>();
+            services.AddScoped<IManagerAccountService, ManagerAccountService>();
+            services.AddScoped<IAccountRoleService, AccountRoleService>();
             services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<IWorkerSessionService, WorkerSessionService>();
+            services.AddScoped<ICourierSessionService, CourierSessionService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
             services.AddScoped<IRestaurantService, RestaurantService>();
-            
+
             services.AddAutoMapper(cfg => cfg.AddProfile(new TitsAutomapperProfile()));
 
             services.AddSwaggerGen(swagger => swagger.SwaggerDoc("v1", new OpenApiInfo() {Title = "TITS Swagger"}));
@@ -106,6 +108,7 @@ namespace TitsAPI
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader()
+                //.AllowCredentials()
             );
 
             app.UseAuthentication();

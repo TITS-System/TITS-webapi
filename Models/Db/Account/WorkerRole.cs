@@ -10,6 +10,6 @@ namespace Models.Db.Account
 
         public string TitleRu { get; set; }
 
-        public virtual ICollection<WorkerAccountToRole> Users { get; set; }
+        public virtual ICollection<AccountToRole> Users { get; set; }
     }
 }
