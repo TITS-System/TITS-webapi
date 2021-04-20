@@ -53,7 +53,7 @@ namespace Services.Implementations
 
             // Create new Token Session
 
-            var endDate = DateTime.Now.AddMinutes(10);
+            var endDate = DateTime.Now.AddDays(1);
 
             CourierTokenSession session = new()
             {
@@ -101,7 +101,7 @@ namespace Services.Implementations
 
             // Create new Token Session
 
-            var endDate = DateTime.Now.AddMinutes(10);
+            var endDate = DateTime.Now.AddDays(1);
 
             ManagerTokenSession session = new()
             {

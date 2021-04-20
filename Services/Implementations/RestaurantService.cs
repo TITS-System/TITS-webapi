@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Abstractions;
@@ -32,8 +33,8 @@ namespace Services.Implementations
             }
 
             var courierAccounts = await _courierAccountRepository.GetByRestaurant(restaurantId);
-
-            var workerAccountDtos = _mapper.Map<ICollection<WorkerAccountDto>>(courierAccounts);
+            
+            var workerAccountDtos = _mapper.Map<ICollection<CourierAccountDto>>(courierAccounts);
             return new GetCouriersResultDto(workerAccountDtos);
         }
 

@@ -17,7 +17,9 @@ namespace Services.AutoMapperProfiles
         public TitsAutomapperProfile()
         {
             // ReverseMap() нужен для обратной конвертации любого мапа
-
+            
+            CreateMap<long?, bool>().ConstructUsing(src => src != null);
+            
             CreateMap<WorkerRoleDto, WorkerRole>().ReverseMap();
             CreateMap<CreateCourierAccountDto, CourierAccount>().ReverseMap();
             CreateMap<CreateManagerAccountDto, ManagerAccount>().ReverseMap();
@@ -30,14 +32,15 @@ namespace Services.AutoMapperProfiles
 
             CreateMap<UnservedOrderDto, Order>().ReverseMap();
 
-            CreateMap<WorkerAccountDto, CourierAccount>().ReverseMap();
+            CreateMap<CourierAccount, CourierAccountDto>().ReverseMap();
+                //.ForMember(dto => dto.IsOnWork, cfg => cfg.MapFrom(account => account.LastCourierSessionId != null)).ReverseMap();
 
             CreateMap<CourierMessageDto, CourierMessage>().ReverseMap();
 
             CreateMap<SosDto, SosRequest>().ReverseMap();
 
             CreateMap<RestaurantDto, Restaurant>().ReverseMap();
-            
+
             CreateMap<LatLng, LatLngDto>().ReverseMap();
         }
     }

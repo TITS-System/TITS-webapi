@@ -5,9 +5,9 @@ namespace Models.Dtos
 {
     public class GetCouriersResultDto
     {
-        public ICollection<WorkerAccountDto> Couriers { get; set; }
+        public ICollection<CourierAccountDto> Couriers { get; set; }
 
-        public GetCouriersResultDto(ICollection<WorkerAccountDto> couriers)
+        public GetCouriersResultDto(ICollection<CourierAccountDto> couriers)
         {
             Couriers = couriers;
         }
