@@ -34,7 +34,7 @@ namespace TitsAPI.Areas.API
         {
             try
             {
-                var loginResultDto = await _tokenSessionService.LoginManager(loginDto);
+                var loginResultDto = await _tokenSessionService.LoginCourier(loginDto);
 
                 return loginResultDto;
             }

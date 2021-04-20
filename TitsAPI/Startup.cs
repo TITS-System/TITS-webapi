@@ -48,6 +48,8 @@ namespace TitsAPI
 
             // Add Repositories
             services.AddScoped<ICourierTokenSessionRepository, CourierTokenSessionRepository>();
+            services.AddScoped<IManagerTokenSessionRepository, ManagerTokenSessionRepository>();
+            services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<ICourierAccountRepository, CourierAccountRepository>();
             services.AddScoped<IManagerAccountRepository, ManagerAccountRepository>();
             services.AddScoped<IWorkerRoleRepository, WorkerRoleRepository>();
@@ -57,6 +59,7 @@ namespace TitsAPI
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
             services.AddScoped<ICourierSessionRepository, CourierSessionRepository>();
+            services.AddScoped<ICourierMessageRepository, CourierMessageRepository>();
 
             // Add Services
             services.AddScoped<ITokenSessionService, TokenSessionService>();
@@ -67,6 +70,7 @@ namespace TitsAPI
             services.AddScoped<ICourierSessionService, CourierSessionService>();
             services.AddScoped<IDeliveryService, DeliveryService>();
             services.AddScoped<IRestaurantService, RestaurantService>();
+            services.AddScoped<IMessagingService, MessagingService>();
 
             services.AddAutoMapper(cfg => cfg.AddProfile(new TitsAutomapperProfile()));
 

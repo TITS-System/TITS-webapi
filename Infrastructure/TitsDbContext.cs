@@ -44,6 +44,8 @@ namespace Infrastructure
         public DbSet<CourierTokenSession> CourierTokenSessions { get; set; }
         public DbSet<ManagerTokenSession> ManagerTokenSessions { get; set; }
         
+        public DbSet<CourierMessage> CourierMessages { get; set; }
+        
         public DbSet<AccountToRole> WorkerAccountToRoles { get; set; }
         public DbSet<WorkerRole> WorkerRoles { get; set; }
 
