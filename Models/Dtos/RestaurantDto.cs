@@ -4,5 +4,6 @@
     {
         public long Id { get; set; }
         public string AddressString { get; set; }
+        public LatLngDto LocationLatLng { get; set; }
     }
 }

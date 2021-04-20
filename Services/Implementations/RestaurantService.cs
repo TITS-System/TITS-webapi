@@ -11,12 +11,14 @@ namespace Services.Implementations
     {
         private IRestaurantRepository _restaurantRepository;
         private ICourierAccountRepository _courierAccountRepository;
+        private ILatLngRepository _latLngRepository;
         private IMapper _mapper;
 
-        public RestaurantService(IRestaurantRepository restaurantRepository, ICourierAccountRepository courierAccountRepository, IMapper mapper)
+        public RestaurantService(IRestaurantRepository restaurantRepository, ICourierAccountRepository courierAccountRepository, ILatLngRepository latLngRepository, IMapper mapper)
         {
             _restaurantRepository = restaurantRepository;
             _courierAccountRepository = courierAccountRepository;
+            _latLngRepository = latLngRepository;
             _mapper = mapper;
         }
 
@@ -45,6 +47,9 @@ namespace Services.Implementations
             }
 
             var restaurantDto = _mapper.Map<RestaurantDto>(restaurant);
+
+            restaurantDto.LocationLatLng = _mapper.Map<LatLngDto>(await _latLngRepository.GetById(restaurant.LocationLatLngId));
+            
             return restaurantDto;
         }
     }

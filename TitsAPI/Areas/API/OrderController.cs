@@ -18,7 +18,6 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpPost]
-        [TypeFilter(typeof(ManagerTokenFilter))]
         public async Task<ActionResult<CreatedDto>> Create([FromBody] CreateOrderDto createOrderDto)
         {
             try
