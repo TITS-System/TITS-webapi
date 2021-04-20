@@ -34,6 +34,8 @@ namespace Services.AutoMapperProfiles
 
             CreateMap<CourierMessageDto, CourierMessage>().ReverseMap();
 
+            CreateMap<SosDto, SosRequest>().ReverseMap();
+
             CreateMap<RestaurantDto, Restaurant>().ReverseMap();
             
             CreateMap<LatLng, LatLngDto>().ReverseMap();

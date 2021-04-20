@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Models.Db;
 using Models.Dtos;
 
@@ -9,5 +10,7 @@ namespace Services.Abstractions
         Task<GetCouriersResultDto> GetCouriers(long restaurantId);
 
         Task<RestaurantDto> GetInfo(long restaurantId);
+
+        Task<RestaurantsDto> GetAll();
     }
 }

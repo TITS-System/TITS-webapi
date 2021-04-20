@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Models.Db;
 
 namespace Infrastructure.Abstractions
@@ -12,5 +13,7 @@ namespace Infrastructure.Abstractions
         Task Remove(Restaurant restaurant);
 
         Task Insert(Restaurant restaurant);
+
+        Task<ICollection<Restaurant>> GetAll();
     }
 }

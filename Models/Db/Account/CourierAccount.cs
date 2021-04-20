@@ -26,6 +26,8 @@ namespace Models.Db.Account
         public virtual ICollection<Delivery> Deliveries { get; set; }
 
         public virtual ICollection<CourierMessage> CourierMessages { get; set; }
+        
+        public virtual ICollection<SosRequest> SosRequests { get; set; }
 
         // public virtual ICollection<Order> CreatedOrders { get; set; }
     }

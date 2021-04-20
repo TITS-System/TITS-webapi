@@ -46,6 +46,8 @@ namespace Infrastructure
         
         public DbSet<CourierMessage> CourierMessages { get; set; }
         
+        public DbSet<SosRequest> SosRequests { get; set; }
+        
         public DbSet<AccountToRole> WorkerAccountToRoles { get; set; }
         public DbSet<WorkerRole> WorkerRoles { get; set; }
 

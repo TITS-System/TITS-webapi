@@ -60,6 +60,7 @@ namespace TitsAPI
             services.AddScoped<IRestaurantRepository, RestaurantRepository>();
             services.AddScoped<ICourierSessionRepository, CourierSessionRepository>();
             services.AddScoped<ICourierMessageRepository, CourierMessageRepository>();
+            services.AddScoped<ISosRequestRepository, SosRequestRepository>();
 
             // Add Services
             services.AddScoped<ITokenSessionService, TokenSessionService>();
@@ -71,6 +72,7 @@ namespace TitsAPI
             services.AddScoped<IDeliveryService, DeliveryService>();
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IMessagingService, MessagingService>();
+            services.AddScoped<ISosService, SosService>();
 
             services.AddAutoMapper(cfg => cfg.AddProfile(new TitsAutomapperProfile()));
 
@@ -91,7 +93,7 @@ namespace TitsAPI
 
             WWWRootPath = Path.GetFullPath("../TITS_front", env.ContentRootPath);
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             _logger = loggerFactory.CreateLogger<Startup>();
 

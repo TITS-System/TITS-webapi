@@ -37,10 +37,11 @@ namespace Seeder
             var workerRoleRepository = new WorkerRoleRepository(Context);
             var workerToRoleRepository = new WorkerToRoleRepository(Context);
             var restaurantRepository = new RestaurantRepository(Context);
+            var sosRequestRepository = new SosRequestRepository(Context);
             _restaurantRepository = restaurantRepository;
             _latLngRepository = new LatLngRepository(Context);
 
-            _courierAccountService = new CourierAccountService(courierAccountRepository, workerRoleRepository, workerToRoleRepository, restaurantRepository, mapper);
+            _courierAccountService = new CourierAccountService(courierAccountRepository, workerRoleRepository, workerToRoleRepository, restaurantRepository, sosRequestRepository, mapper);
             _managerAccountService = new ManagerAccountService(managerAccountRepository, workerRoleRepository, workerToRoleRepository, restaurantRepository, mapper);
             _accountRoleService = new AccountRoleService(accountRepository, workerRoleRepository, workerToRoleRepository, mapper);
         }

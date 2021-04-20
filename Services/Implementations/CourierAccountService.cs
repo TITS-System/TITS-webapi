@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Abstractions;
 using Infrastructure.Verbatims;
+using Models.Db;
 using Models.Db.Account;
 using Models.Dtos;
 using Models.DTOs;
@@ -23,14 +25,17 @@ namespace Services.Implementations
 
         private IRestaurantRepository _restaurantRepository;
 
+        private ISosRequestRepository _sosRequestRepository;
+
         private IMapper _mapper;
 
-        public CourierAccountService(ICourierAccountRepository courierAccountRepository, IWorkerRoleRepository workerRoleRepository, IWorkerToRoleRepository workerToRoleRepository, IRestaurantRepository restaurantRepository, IMapper mapper)
+        public CourierAccountService(ICourierAccountRepository courierAccountRepository, IWorkerRoleRepository workerRoleRepository, IWorkerToRoleRepository workerToRoleRepository, IRestaurantRepository restaurantRepository, ISosRequestRepository sosRequestRepository, IMapper mapper)
         {
             _courierAccountRepository = courierAccountRepository;
             _workerToRoleRepository = workerToRoleRepository;
             _workerRoleRepository = workerRoleRepository;
             _restaurantRepository = restaurantRepository;
+            _sosRequestRepository = sosRequestRepository;
             _mapper = mapper;
         }
 

@@ -52,5 +52,14 @@ namespace Services.Implementations
             
             return restaurantDto;
         }
+
+        public async Task<RestaurantsDto> GetAll()
+        {
+            var restaurants = await _restaurantRepository.GetAll();
+
+            var restaurantDtos = _mapper.Map<ICollection<RestaurantDto>>(restaurants);
+
+            return new RestaurantsDto(restaurantDtos);
+        }
     }
 }

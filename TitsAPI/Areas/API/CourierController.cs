@@ -86,7 +86,7 @@ namespace TitsAPI.Areas.API
 
         [HttpPost]
         [TypeFilter(typeof(CourierTokenFilter))]
-        public async Task<ActionResult<CreatedDto>> ChangeAccountData([FromBody] ChangeAccountDataDto changeAccountDataDto)
+        public async Task<ActionResult> ChangeAccountData([FromBody] ChangeAccountDataDto changeAccountDataDto)
         {
             try
             {

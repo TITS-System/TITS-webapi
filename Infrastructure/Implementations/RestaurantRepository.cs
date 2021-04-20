@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Infrastructure.Abstractions;
+using Microsoft.EntityFrameworkCore;
 using Models.Db;
 
 namespace Infrastructure.Implementations
@@ -31,6 +33,11 @@ namespace Infrastructure.Implementations
         {
             Context.Restaurants.Add(restaurant);
             await Context.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<Restaurant>> GetAll()
+        {
+            return await Context.Restaurants.ToListAsync();
         }
     }
 }
