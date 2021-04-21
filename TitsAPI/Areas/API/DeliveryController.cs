@@ -79,10 +79,14 @@ namespace TitsAPI.Areas.API
 
         [HttpGet]
         [TypeFilter(typeof(CourierTokenFilter))]
-        public async Task<ActionResult<DeliveriesDto>> GetByCourierAndDates(long? courierId)
+        public async Task<ActionResult<DeliveriesDto>> GetInProgressByCourier(long? courierId)
         {
             try
             {
+                if (courierId == null)
+                {
+                    throw new("No courierId passed");
+                }
                 var deliveriesDto = await _deliveryService.GetInProgressByCourier(courierId.Value);
                 return deliveriesDto;
             }
