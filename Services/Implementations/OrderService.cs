@@ -84,5 +84,21 @@ namespace Services.Implementations
 
             return orderDto;
         }
+
+        public async Task<OrdersDto> GetAllByRestaurant(long restaurantId)
+        {
+            var restaurant = await _restaurantRepository.GetById(restaurantId);
+
+            if (restaurant == null)
+            {
+                throw new("Restaurant not found");
+            }
+
+            var orders = await _orderRepository.GetAllByRestaurant(restaurantId);
+
+            var orderDtos = _mapper.Map<ICollection<OrderDto>>(orders);
+
+            return new OrdersDto(orderDtos);
+        }
     }
 }

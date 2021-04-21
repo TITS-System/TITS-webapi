@@ -22,13 +22,20 @@ namespace Infrastructure.Implementations
         public async Task<ICollection<Order>> GetUnserved(long restaurantId)
         {
             return await Context.Orders
-                       .Where(o => 
-                           // если доставок в принципе нет
-                           (!o.Deliveries.Any()) ||
-                           // или если нет доставки, которая в процессе или завершена
-                           !(o.Deliveries.Any(d=>d.Status == DeliveryStatus.InProgress || d.Status == DeliveryStatus.Finished))
-                           && o.RestaurantId == restaurantId
+                .Where(o =>
+                    // если доставок в принципе нет
+                    (!o.Deliveries.Any()) ||
+                    // или если нет доставки, которая в процессе или завершена
+                    !(o.Deliveries.Any(d => d.Status == DeliveryStatus.InProgress || d.Status == DeliveryStatus.Finished))
+                    && o.RestaurantId == restaurantId
                 )
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<Order>> GetAllByRestaurant(long restaurantId)
+        {
+            return await Context.Orders
+                .Where(o => o.RestaurantId == restaurantId)
                 .ToListAsync();
         }
 

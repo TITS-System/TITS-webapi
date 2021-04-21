@@ -6,10 +6,13 @@ using Infrastructure;
 using Infrastructure.Abstractions;
 using Infrastructure.Implementations;
 using Infrastructure.Verbatims;
+using Microsoft.Extensions.Logging;
 using Models.Db;
 using Models.Db.Account;
+using Models.Dtos;
 using Models.DTOs;
 using Models.DTOs.WorkerAccountDtos;
+using Npgsql.Logging;
 using Services.Abstractions;
 using Services.AutoMapperProfiles;
 using Services.Implementations;
@@ -24,6 +27,8 @@ namespace Seeder
 
         private IRestaurantRepository _restaurantRepository;
         private ILatLngRepository _latLngRepository;
+        private DeliveryService _deliveryService;
+        private OrderService _orderService;
 
         public SeedData()
         {
@@ -38,12 +43,16 @@ namespace Seeder
             var workerToRoleRepository = new WorkerToRoleRepository(Context);
             var restaurantRepository = new RestaurantRepository(Context);
             var sosRequestRepository = new SosRequestRepository(Context);
+            var orderRepository = new OrderRepository(Context);
+            var deliveryRepository = new DeliveryRepository(Context);
             _restaurantRepository = restaurantRepository;
             _latLngRepository = new LatLngRepository(Context);
 
             _courierAccountService = new CourierAccountService(courierAccountRepository, workerRoleRepository, workerToRoleRepository, restaurantRepository, sosRequestRepository, mapper);
             _managerAccountService = new ManagerAccountService(managerAccountRepository, workerRoleRepository, workerToRoleRepository, restaurantRepository, mapper);
             _accountRoleService = new AccountRoleService(accountRepository, workerRoleRepository, workerToRoleRepository, mapper);
+            _deliveryService = new DeliveryService(orderRepository, deliveryRepository, courierAccountRepository, _latLngRepository, mapper, new LoggerFactory().CreateLogger<DeliveryService>());
+            _orderService = new OrderService(mapper, orderRepository, _restaurantRepository, _latLngRepository, _deliveryService);
         }
 
         private TitsDbContext Context { get; set; }
@@ -75,6 +84,12 @@ namespace Seeder
             await _accountRoleService.AddToRole(managerId, WorkerRolesVerbatim.Manager);
 
             await _courierAccountService.AssignToRestaurant(new AssignToRestaurantDto() {CourierId = courierId, RestaurantId = restaurant.Id});
+
+            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #1", "Адрес #1", "Доп адрес #1", new LatLngDto() {Lat = 51, Lng = 51}));
+            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #2", "Адрес #2", "Доп адрес #2", new LatLngDto() {Lat = 52, Lng = 52}));
+            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #3", "Адрес #3", "Доп адрес #3", new LatLngDto() {Lat = 53, Lng = 53}));
+            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #4", "Адрес #4", "Доп адрес #4", new LatLngDto() {Lat = 54, Lng = 54}));
+            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #5", "Адрес #5", "Доп адрес #5", new LatLngDto() {Lat = 55, Lng = 55}));
         }
 
         private void SeedAccountRoles()

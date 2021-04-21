@@ -9,6 +9,8 @@ namespace Infrastructure.Abstractions
         Task<Order> GetById(long id);
 
         Task<ICollection<Order>> GetUnserved(long restaurantId);
+        
+        Task<ICollection<Order>> GetAllByRestaurant(long restaurantId);
 
         Task Update(Order order);
 

@@ -47,6 +47,21 @@ namespace TitsAPI.Areas.API
         }
         
         [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<OrdersDto>> GetAllByRestaurant(long restaurantId)
+        {
+            try
+            {
+                var ordersDto = await _orderService.GetAllByRestaurant(restaurantId);
+                return ordersDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+        
+        [HttpGet]
         [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult<OrderDto>> GetInfo(long orderId)
         {
