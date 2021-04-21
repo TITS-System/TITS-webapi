@@ -90,10 +90,17 @@ namespace Services.Implementations
             {
                 throw new("Delivery no found");
             }
+            
+            // It can't be null, it would be a system data consistency error
 
             LatLng latLng = _mapper.Map<LatLng>(addDeliveryLocationDto.LatLngDto);
             latLng.DeliveryId = delivery.Id;
             await _latLngRepository.Insert(latLng);
+
+            // Save courier last location
+            var courierAccount = await _courierAccountRepository.GetById(delivery.CourierAccountId);
+            courierAccount.LastLatLngId = latLng.Id;
+            await _courierAccountRepository.Update(courierAccount);
         }
 
         public async Task FinishDelivery(long deliveryId)
