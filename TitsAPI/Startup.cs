@@ -75,6 +75,7 @@ namespace TitsAPI
             services.AddScoped<IMessagingService, MessagingService>();
             services.AddScoped<ISosService, SosService>();
             services.AddScoped<IZoneService, ZoneService>();
+            services.AddScoped<IStatsService, StatsService>();
             
             services.AddSingleton<IAutoDeliveryServerService, AutoDeliveryServerService>();
 
