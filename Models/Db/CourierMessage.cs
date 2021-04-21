@@ -13,6 +13,8 @@ namespace Models.Db
 
         public DateTime CreationDateTime { get; set; }
 
+        public bool IsFromCourier { get; set; }
+
         [ForeignKey(nameof(CourierAccount))]
         public long CourierAccountId { get; set; }
 
