@@ -45,5 +45,20 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
+        
+        [HttpGet]
+        [TypeFilter(typeof(CourierTokenFilter))]
+        public async Task<ActionResult<OrderDto>> GetInfo(long orderId)
+        {
+            try
+            {
+                var orderDto = await _orderService.GetInfo(orderId);
+                return orderDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
     }
 }

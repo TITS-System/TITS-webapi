@@ -87,6 +87,7 @@ namespace TitsAPI.Areas.API
                 {
                     throw new("No courierId passed");
                 }
+                
                 var deliveriesDto = await _deliveryService.GetInProgressByCourier(courierId.Value);
                 return deliveriesDto;
             }

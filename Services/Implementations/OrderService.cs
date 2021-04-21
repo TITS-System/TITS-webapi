@@ -70,5 +70,19 @@ namespace Services.Implementations
 
             return new GetUnservedOrdersResultDto() {Orders = unservedOrderDtos};
         }
+
+        public async Task<OrderDto> GetInfo(long id)
+        {
+            var order = await _orderRepository.GetById(id);
+
+            if (order == null)
+            {
+                throw new("Order not found");
+            }
+
+            var orderDto = _mapper.Map<OrderDto>(order);
+
+            return orderDto;
+        }
     }
 }

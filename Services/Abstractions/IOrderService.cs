@@ -9,5 +9,7 @@ namespace Services.Abstractions
         Task<CreatedDto> Create(CreateOrderDto createOrderDto);
 
         Task<GetUnservedOrdersResultDto> GetUnserved(long restaurantId);
+
+        Task<OrderDto> GetInfo(long id);
     }
 }

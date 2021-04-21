@@ -31,6 +31,7 @@ namespace Services.AutoMapperProfiles
                 .ReverseMap();
 
             CreateMap<UnservedOrderDto, Order>().ReverseMap();
+            CreateMap<OrderDto, Order>().ReverseMap();
 
             CreateMap<CourierAccount, CourierAccountDto>().ReverseMap();
                 //.ForMember(dto => dto.IsOnWork, cfg => cfg.MapFrom(account => account.LastCourierSessionId != null)).ReverseMap();
