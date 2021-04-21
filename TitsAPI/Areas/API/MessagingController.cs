@@ -23,7 +23,7 @@ namespace TitsAPI.Areas.API
         {
             try
             {
-                await _messagingService.Append(sendCourierMessageDto);
+                await _messagingService.Append(sendCourierMessageDto, true);
                 return Ok();
             }
             catch (Exception ex)
@@ -38,7 +38,7 @@ namespace TitsAPI.Areas.API
         {
             try
             {
-                await _messagingService.Append(sendCourierMessageDto);
+                await _messagingService.Append(sendCourierMessageDto, false);
                 return Ok();
             }
             catch (Exception ex)

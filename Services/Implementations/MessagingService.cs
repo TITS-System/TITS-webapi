@@ -24,7 +24,7 @@ namespace Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task Append(SendCourierMessageDto sendCourierMessageDto)
+        public async Task Append(SendCourierMessageDto sendCourierMessageDto, bool isFromCourier)
         {
             var courierAccount = await _courierAccountRepository.GetById(sendCourierMessageDto.CourierId);
             
@@ -37,7 +37,8 @@ namespace Services.Implementations
             {
                 Content = sendCourierMessageDto.Content,
                 CourierAccount = courierAccount,
-                CreationDateTime = DateTime.Now
+                CreationDateTime = DateTime.Now,
+                IsFromCourier = isFromCourier
             };
 
             await _courierMessageRepository.Insert(courierMessage);
