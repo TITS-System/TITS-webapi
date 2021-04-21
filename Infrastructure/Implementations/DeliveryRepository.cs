@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Infrastructure.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Models.Db;
+using Models.Enums;
 
 namespace Infrastructure.Implementations
 {
@@ -27,6 +28,11 @@ namespace Infrastructure.Implementations
         public async Task<ICollection<Delivery>> GetByCourierIdAndDate(long courierId, DateTime startTime, DateTime endTime)
         {
             return await Context.Deliveries.Where(d => d.CourierAccountId == courierId && d.EndTime > startTime && d.EndTime < endTime).ToListAsync();
+        }
+
+        public async Task<ICollection<Delivery>> GetInProgressByCourier(long courierId)
+        {
+            return await Context.Deliveries.Where(d => d.CourierAccountId == courierId && d.Status == DeliveryStatus.InProgress).ToListAsync();
         }
 
         public async Task Update(Delivery delivery)

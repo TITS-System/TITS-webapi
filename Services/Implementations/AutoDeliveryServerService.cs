@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Infrastructure.Abstractions;
 using Models.Db;
 using Models.Db.Account;
@@ -11,7 +12,7 @@ using Services.Abstractions;
 
 namespace Services.Implementations
 {
-    public class AutoDeliveryServerService
+    public class AutoDeliveryServerService : IAutoDeliveryServerService
     {
         private IOrderRepository _orderRepository;
         private IDeliveryRepository _deliveryRepository;
@@ -90,7 +91,7 @@ namespace Services.Implementations
             }
         }
 
-        public void SetAutoDeliveryMode(bool mode)
+        public async Task SetAutoDeliveryMode(bool mode)
         {
             _autoDeliveryMode = mode;
         }

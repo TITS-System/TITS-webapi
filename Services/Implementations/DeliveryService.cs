@@ -131,7 +131,7 @@ namespace Services.Implementations
             await _deliveryRepository.Update(delivery);
         }
 
-        public async Task<DeliveriesDto> GetByCourierAndDate(GetByCourierAndDateDto getByCourierAndDateDto)
+        public async Task<DeliveriesDto> GetAllByCourierAndDate(GetByCourierAndDateDto getByCourierAndDateDto)
         {
             var courierAccount = await _courierAccountRepository.GetById(getByCourierAndDateDto.CourierId);
 
@@ -145,6 +145,22 @@ namespace Services.Implementations
                 getByCourierAndDateDto.StartTime,
                 getByCourierAndDateDto.EndTime
             );
+
+            var deliveryDtos = deliveries.Select(d => new DeliveryDto(d.OrderId, d.CourierAccountId)).ToList();
+
+            return new DeliveriesDto(deliveryDtos);
+        }
+
+        public async Task<DeliveriesDto> GetInProgressByCourier(long courierId)
+        {
+            var courierAccount = await _courierAccountRepository.GetById(courierId);
+
+            if (courierAccount == null)
+            {
+                throw new(MessagesVerbatim.AccountNotFound);
+            }
+
+            var deliveries = await _deliveryRepository.GetInProgressByCourier(courierId);
 
             var deliveryDtos = deliveries.Select(d => new DeliveryDto(d.OrderId, d.CourierAccountId)).ToList();
 

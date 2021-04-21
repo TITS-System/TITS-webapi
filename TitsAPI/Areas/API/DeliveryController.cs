@@ -68,7 +68,22 @@ namespace TitsAPI.Areas.API
         {
             try
             {
-                var deliveriesDto = await _deliveryService.GetByCourierAndDate(getByCourierAndDateDto);
+                var deliveriesDto = await _deliveryService.GetAllByCourierAndDate(getByCourierAndDateDto);
+                return deliveriesDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [TypeFilter(typeof(CourierTokenFilter))]
+        public async Task<ActionResult<DeliveriesDto>> GetByCourierAndDates(long? courierId)
+        {
+            try
+            {
+                var deliveriesDto = await _deliveryService.GetInProgressByCourier(courierId.Value);
                 return deliveriesDto;
             }
             catch (Exception ex)
