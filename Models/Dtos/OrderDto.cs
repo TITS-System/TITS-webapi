@@ -2,6 +2,8 @@
 {
     public class OrderDto
     {
+        public long Id { get; set; }
+        
         public string Content { get; set; }
 
         public string AddressString { get; set; }

@@ -85,19 +85,38 @@ namespace Seeder
             latLng.RestaurantLocationId = restaurant.Id;
             await _latLngRepository.Update(latLng);
 
-            var courierId = (await _courierAccountService.CreateCourier(new CreateCourierAccountDto() {Login = "Courier", Password = "Courier", Username = "Misha", RestaurantId = restaurant.Id})).Id;
+            var courier1Id = (await _courierAccountService.CreateCourier(new CreateCourierAccountDto() {Login = "Courier1", Password = "Courier1", Username = "Misha1", RestaurantId = restaurant.Id})).Id;
+            var courier2Id = (await _courierAccountService.CreateCourier(new CreateCourierAccountDto() {Login = "Courier2", Password = "Courier2", Username = "Misha2", RestaurantId = restaurant.Id})).Id;
+            var courier3Id = (await _courierAccountService.CreateCourier(new CreateCourierAccountDto() {Login = "Courier3", Password = "Courier3", Username = "Misha3", RestaurantId = restaurant.Id})).Id;
+            var courier4Id = (await _courierAccountService.CreateCourier(new CreateCourierAccountDto() {Login = "Courier4", Password = "Courier4", Username = "Misha4", RestaurantId = restaurant.Id})).Id;
+            var courier5Id = (await _courierAccountService.CreateCourier(new CreateCourierAccountDto() {Login = "Courier5", Password = "Courier5", Username = "Misha5", RestaurantId = restaurant.Id})).Id;
+
             var managerId = (await _managerAccountService.CreateManager(new CreateManagerAccountDto() {Login = "Manager", Password = "Manager", Username = "Vitaliy"})).Id;
 
-            await _accountRoleService.AddToRole(courierId, WorkerRolesVerbatim.Courier);
+            await _accountRoleService.AddToRole(courier1Id, WorkerRolesVerbatim.Courier);
+            await _accountRoleService.AddToRole(courier2Id, WorkerRolesVerbatim.Courier);
+            await _accountRoleService.AddToRole(courier3Id, WorkerRolesVerbatim.Courier);
+            await _accountRoleService.AddToRole(courier4Id, WorkerRolesVerbatim.Courier);
+            await _accountRoleService.AddToRole(courier5Id, WorkerRolesVerbatim.Courier);
             await _accountRoleService.AddToRole(managerId, WorkerRolesVerbatim.Manager);
 
-            await _courierAccountService.AssignToRestaurant(new AssignToRestaurantDto() {CourierId = courierId, RestaurantId = restaurant.Id});
+            var order1Id = (await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #1", "Ulitsa Kamozina, 34, Bryansk, Bryanskaya oblast', 241012", "Доп адрес #1", new LatLngDto() {Lat = 53.30167004067159f, Lng = 34.2949175161137f}))).Id;
+            var order2Id = (await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #2", "Ulitsa Kamozina, 38, Bryansk, Bryansk Oblast, 241012", "Доп адрес #2", new LatLngDto() {Lat = 53.30153773345045f, Lng = 34.29304192452332f}))).Id;
+            var order3Id = (await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #3", "Desninskaya Ulitsa, 11, Bryansk, Bryanskaya oblast', 241012", "Доп адрес #3", new LatLngDto() {Lat = 53.30008227742239f, Lng = 34.29332623850165f}))).Id;
+            var order4Id = (await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #4", "Ulitsa Orlovskaya, 9, Bryansk, Bryanskaya oblast', 241012", "Доп адрес #4", new LatLngDto() {Lat = 53.303368203499296f, Lng = 34.29550955643432f}))).Id;
+            var order5Id = (await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #5", "Ulitsa 3 Internatsionala, 33, Bryansk, Bryansk Oblast, 241035", "Доп адрес #5", new LatLngDto() {Lat = 53.3017969037012f, Lng = 34.299853157082985f}))).Id;
 
-            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #1", "Адрес #1", "Доп адрес #1", new LatLngDto() {Lat = 51, Lng = 51}));
-            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #2", "Адрес #2", "Доп адрес #2", new LatLngDto() {Lat = 52, Lng = 52}));
-            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #3", "Адрес #3", "Доп адрес #3", new LatLngDto() {Lat = 53, Lng = 53}));
-            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #4", "Адрес #4", "Доп адрес #4", new LatLngDto() {Lat = 54, Lng = 54}));
-            await _orderService.Create(new CreateOrderDto(restaurant.Id, "Содержание заказа #5", "Адрес #5", "Доп адрес #5", new LatLngDto() {Lat = 55, Lng = 55}));
+            var delivery1Id = (await _deliveryService.BeginDelivery(new BeginDeliveryDto() {CourierId = courier1Id, OrderId = order1Id})).Id;
+            var delivery2Id = (await _deliveryService.BeginDelivery(new BeginDeliveryDto() {CourierId = courier2Id, OrderId = order2Id})).Id;
+            var delivery3Id = (await _deliveryService.BeginDelivery(new BeginDeliveryDto() {CourierId = courier3Id, OrderId = order3Id})).Id;
+            var delivery4Id = (await _deliveryService.BeginDelivery(new BeginDeliveryDto() {CourierId = courier4Id, OrderId = order4Id})).Id;
+            var delivery5Id = (await _deliveryService.BeginDelivery(new BeginDeliveryDto() {CourierId = courier5Id, OrderId = order5Id})).Id;
+
+            await _deliveryService.AddDeliveryLocation(new AddDeliveryLocationDto(delivery1Id, new LatLngDto() {Lat = 53.304170935355074f, Lng = 34.30092283556655f}));
+            await _deliveryService.AddDeliveryLocation(new AddDeliveryLocationDto(delivery2Id, new LatLngDto() {Lat = 53.30660322360655f, Lng = 34.29535910345766f}));
+            await _deliveryService.AddDeliveryLocation(new AddDeliveryLocationDto(delivery3Id, new LatLngDto() {Lat = 53.30440121711519f, Lng = 34.30663108022984f}));
+            await _deliveryService.AddDeliveryLocation(new AddDeliveryLocationDto(delivery4Id, new LatLngDto() {Lat = 53.31164006638071f, Lng = 34.30607711553764f}));
+            await _deliveryService.AddDeliveryLocation(new AddDeliveryLocationDto(delivery5Id, new LatLngDto() {Lat = 53.31276248184245f, Lng = 34.29251702324832f}));
         }
 
         private void SeedAccountRoles()
@@ -115,9 +134,10 @@ namespace Seeder
             Zone zone = new Zone();
 
             await _zoneRepository.Insert(zone);
-            
+
             // {lat:53.263692, lng:34.339379},{lat:53.263769, lng: 34.344400},{lat:53.261696, lng:34.344690},{lat:53.260977, lng:34.340087}
-            LatLng[] points = {
+            LatLng[] points =
+            {
                 new() {Lat = 53.263692f, Lng = 34.339379f, ZoneId = zone.Id},
                 new() {Lat = 53.263769f, Lng = 34.344400f, ZoneId = zone.Id},
                 new() {Lat = 53.261696f, Lng = 34.344690f, ZoneId = zone.Id},

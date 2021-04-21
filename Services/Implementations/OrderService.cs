@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Abstractions;
@@ -42,6 +43,8 @@ namespace Services.Implementations
             await _latLngRepository.Insert(latLng);
 
             var order = _mapper.Map<Order>(createOrderDto);
+            
+            order.CreationDateTime = DateTime.Now;
 
             // DestinationLatLng is ignored when mapping
             // Save entity with reference
