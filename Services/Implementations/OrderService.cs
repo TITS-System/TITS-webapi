@@ -17,12 +17,15 @@ namespace Services.Implementations
         private IRestaurantRepository _restaurantRepository;
         private ILatLngRepository _latLngRepository;
 
-        public OrderService(IMapper mapper, IOrderRepository orderRepository, IRestaurantRepository restaurantRepository, ILatLngRepository latLngRepository)
+        private IDeliveryService _deliveryService;
+
+        public OrderService(IMapper mapper, IOrderRepository orderRepository, IRestaurantRepository restaurantRepository, ILatLngRepository latLngRepository, IDeliveryService deliveryService)
         {
             _mapper = mapper;
             _orderRepository = orderRepository;
             _restaurantRepository = restaurantRepository;
             _latLngRepository = latLngRepository;
+            _deliveryService = deliveryService;
         }
 
         public async Task<CreatedDto> Create(CreateOrderDto createOrderDto)

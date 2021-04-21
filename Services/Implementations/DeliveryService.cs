@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Abstractions;
@@ -29,7 +30,7 @@ namespace Services.Implementations
             _latLngRepository = latLngRepository;
             _mapper = mapper;
         }
-
+        
         public async Task BeginDelivery(BeginDeliveryDto beginDeliveryDto)
         {
             var order = await _orderRepository.GetById(beginDeliveryDto.OrderId);
@@ -62,6 +63,8 @@ namespace Services.Implementations
             };
 
             await _deliveryRepository.Insert(delivery);
+            
+            // TODO: Notify
         }
 
         public async Task<LatLngsDto> GetDeliveryLocations(long deliveryId)

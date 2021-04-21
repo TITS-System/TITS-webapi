@@ -17,7 +17,8 @@ namespace Services.Abstractions
         Task CancelDelivery(long deliveryId);
 
         Task<DeliveriesDto> GetByCourierAndDate(GetByCourierAndDateDto getByCourierAndDateDto);
-        
+
+
         // TODO: Get Courier Open Deliveries
     }
 }
