@@ -175,7 +175,7 @@ namespace Services.Implementations
 
             var deliveries = await _deliveryRepository.GetInProgressByCourier(courierId);
 
-            var deliveryDtos = deliveries.Select(d => new DeliveryDto(d.OrderId, d.CourierAccountId)).ToList();
+            var deliveryDtos = _mapper.Map<ICollection<DeliveryDto>>(deliveries);
 
             return new DeliveriesDto(deliveryDtos);
         }

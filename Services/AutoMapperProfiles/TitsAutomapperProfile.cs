@@ -30,6 +30,8 @@ namespace Services.AutoMapperProfiles
                     cfg => cfg.Ignore())
                 .ReverseMap();
 
+            CreateMap<DeliveryDto, Delivery>().ReverseMap();
+
             CreateMap<UnservedOrderDto, Order>().ReverseMap();
             CreateMap<OrderDto, Order>().ReverseMap();
 
