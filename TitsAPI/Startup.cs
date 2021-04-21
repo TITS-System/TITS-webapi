@@ -73,6 +73,7 @@ namespace TitsAPI
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IMessagingService, MessagingService>();
             services.AddScoped<ISosService, SosService>();
+            
             services.AddSingleton<IAutoDeliveryServerService, AutoDeliveryServerService>();
 
             services.AddAutoMapper(cfg => cfg.AddProfile(new TitsAutomapperProfile()));

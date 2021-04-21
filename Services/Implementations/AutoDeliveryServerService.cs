@@ -95,5 +95,10 @@ namespace Services.Implementations
         {
             _autoDeliveryMode = mode;
         }
+
+        public async Task<bool> GetMode()
+        {
+            return _autoDeliveryMode;
+        }
     }
 }
