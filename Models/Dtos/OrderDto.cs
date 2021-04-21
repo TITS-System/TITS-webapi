@@ -8,6 +8,8 @@
         
         public string AddressAdditional { get; set; }
 
+        public string CreationDateTime { get; set; }
+
         public LatLngDto Destination { get; set; }
     }
 }

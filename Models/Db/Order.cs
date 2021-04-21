@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,6 +15,8 @@ namespace Models.Db
         public string AddressString { get; set; }
 
         public string AddressAdditional { get; set; }
+
+        public DateTime CreationDateTime { get; set; }
 
         [ForeignKey(nameof(DestinationLatLng))]
         public long DestinationLatLngId { get; set; }

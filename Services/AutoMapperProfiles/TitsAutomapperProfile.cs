@@ -1,3 +1,4 @@
+using System;
 using AutoMapper;
 using Models.Db;
 using Models.Db.Account;
@@ -17,9 +18,12 @@ namespace Services.AutoMapperProfiles
         public TitsAutomapperProfile()
         {
             // ReverseMap() нужен для обратной конвертации любого мапа
-            
+
             CreateMap<long?, bool>().ConstructUsing(src => src != null);
-            
+
+            CreateMap<DateTime, string>().ConstructUsing(src => src.ToString("yyyy-MM-dd dddd HH\\:mm\\:ss"));
+            CreateMap<DateTime?, string>().ConstructUsing(src => src != null ? src.Value.ToString("yyyy-MM-dd dddd HH\\:mm\\:ss") : "");
+
             CreateMap<WorkerRoleDto, WorkerRole>().ReverseMap();
             CreateMap<CreateCourierAccountDto, CourierAccount>().ReverseMap();
             CreateMap<CreateManagerAccountDto, ManagerAccount>().ReverseMap();
@@ -38,7 +42,7 @@ namespace Services.AutoMapperProfiles
             CreateMap<OrderDto, Order>().ReverseMap();
 
             CreateMap<CourierAccount, CourierAccountDto>().ReverseMap();
-                //.ForMember(dto => dto.IsOnWork, cfg => cfg.MapFrom(account => account.LastCourierSessionId != null)).ReverseMap();
+            //.ForMember(dto => dto.IsOnWork, cfg => cfg.MapFrom(account => account.LastCourierSessionId != null)).ReverseMap();
 
             CreateMap<CourierMessageDto, CourierMessage>().ReverseMap();
 
