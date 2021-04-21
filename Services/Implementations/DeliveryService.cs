@@ -8,6 +8,7 @@ using Infrastructure.Abstractions;
 using Infrastructure.Verbatims;
 using Models.Db;
 using Models.Dtos;
+using Models.DTOs.Misc;
 using Models.Enums;
 using Services.Abstractions;
 
@@ -31,7 +32,7 @@ namespace Services.Implementations
             _mapper = mapper;
         }
         
-        public async Task BeginDelivery(BeginDeliveryDto beginDeliveryDto)
+        public async Task<CreatedDto> BeginDelivery(BeginDeliveryDto beginDeliveryDto)
         {
             var order = await _orderRepository.GetById(beginDeliveryDto.OrderId);
 
@@ -65,6 +66,8 @@ namespace Services.Implementations
             await _deliveryRepository.Insert(delivery);
             
             // TODO: Notify
+
+            return new CreatedDto(delivery.Id);
         }
 
         public async Task<LatLngsDto> GetDeliveryLocations(long deliveryId)

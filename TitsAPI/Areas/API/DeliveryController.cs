@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Models.Dtos;
+using Models.DTOs.Misc;
 using Services.Abstractions;
 using TitsAPI.Controllers;
 using TitsAPI.Filters;
@@ -19,12 +20,12 @@ namespace TitsAPI.Areas.API
 
         [HttpPost]
         [TypeFilter(typeof(CourierTokenFilter))]
-        public async Task<ActionResult> Begin([FromBody] BeginDeliveryDto beginDeliveryDto)
+        public async Task<ActionResult<CreatedDto>> Begin([FromBody] BeginDeliveryDto beginDeliveryDto)
         {
             try
             {
-                await _deliveryService.BeginDelivery(beginDeliveryDto);
-                return Ok();
+                var createdDto = await _deliveryService.BeginDelivery(beginDeliveryDto);
+                return createdDto;
             }
             catch (Exception ex)
             {

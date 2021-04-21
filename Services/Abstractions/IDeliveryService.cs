@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Models.Dtos;
+using Models.DTOs.Misc;
 
 namespace Services.Abstractions
 {
     public interface IDeliveryService
     {
-        Task BeginDelivery(BeginDeliveryDto beginDeliveryDto);
+        Task<CreatedDto> BeginDelivery(BeginDeliveryDto beginDeliveryDto);
 
         Task<LatLngsDto> GetDeliveryLocations(long deliveryId);
         
