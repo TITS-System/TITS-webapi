@@ -43,9 +43,9 @@ namespace Services.Implementations
 
             var orderDeliveries = await _deliveryRepository.GetByOrderId(order.Id);
 
-            if (orderDeliveries.Any(d => d.Status == DeliveryStatus.InProgress))
+            if (orderDeliveries.Any(d => d.Status == DeliveryStatus.InProgress || d.Status == DeliveryStatus.Finished))
             {
-                throw new("Delivery for this order is already in progress");
+                throw new("Delivery for this order is already in progress or finished");
             }
 
             var courierAccount = await _courierAccountRepository.GetById(beginDeliveryDto.CourierId);
@@ -115,6 +115,11 @@ namespace Services.Implementations
                 throw new("Delivery no found");
             }
 
+            if (delivery.Status == DeliveryStatus.Finished)
+            {
+                throw new("Delivery is already finished");
+            }
+
             delivery.Status = DeliveryStatus.Finished;
             delivery.EndTime = DateTime.Now;
             await _deliveryRepository.Update(delivery);
@@ -127,6 +132,11 @@ namespace Services.Implementations
             if (delivery == null)
             {
                 throw new("Delivery no found");
+            }
+
+            if (delivery.Status == DeliveryStatus.Canceled)
+            {
+                throw new("Delivery is already canceled");
             }
 
             delivery.Status = DeliveryStatus.Canceled;

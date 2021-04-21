@@ -45,20 +45,5 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
-
-        [HttpGet]
-        [TypeFilter(typeof(ManagerTokenFilter))]
-        public async Task<ActionResult<GetCouriersResultDto>> GetCouriers(long restaurantId)
-        {
-            try
-            {
-                var getCouriersResultDto = await _restaurantService.GetCouriers(restaurantId);
-                return getCouriersResultDto;
-            }
-            catch (Exception ex)
-            {
-                return TitsError(ex.Message);
-            }
-        }
     }
 }
