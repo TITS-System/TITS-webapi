@@ -245,6 +245,9 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long>("LocationLatLngId")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("UseAutoDeliveryServer")
+                        .HasColumnType("boolean");
+
                     b.HasKey("Id");
 
                     b.HasIndex("LocationLatLngId");

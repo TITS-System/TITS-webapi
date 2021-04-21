@@ -16,7 +16,10 @@ namespace Models.Db.Account
 
         public virtual Restaurant AssignedToRestaurant { get; set; }
 
+        [ForeignKey(nameof(LastLatLng))]
         public long? LastLatLngId { get; set; }
+        
+        public virtual LatLng LastLatLng { get; set; }
 
         [ForeignKey(nameof(LastCourierSession))]
         public long? LastCourierSessionId { get; set; }

@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Abstractions;
+using Infrastructure.Verbatims;
 using Models.Db.Account;
+using Models.Dtos;
 using Models.DTOs.Misc;
 using Models.DTOs.WorkerAccountDtos;
 using Services.Abstractions;
@@ -43,6 +45,31 @@ namespace Services.Implementations
             await _managerAccountRepository.Insert(managerAccount);
 
             return new CreatedDto(managerAccount.Id);
+        }
+
+        public async Task<ManagerFullInfoDto> GetManagerInfo(long managerId)
+        {
+            var managerAccount = await _managerAccountRepository.GetById(managerId);
+
+            var managerFullInfoDto = _mapper.Map<ManagerFullInfoDto>(managerAccount);
+
+            return managerFullInfoDto;
+        }
+
+        public async Task ChangeManagerProfile(ChangeManagerProfileDto changeManagerProfileDto)
+        {
+            var managerAccount = await _managerAccountRepository.GetById(changeManagerProfileDto.ManagerId);
+
+            if (managerAccount == null)
+            {
+                throw new(MessagesVerbatim.AccountNotFound);
+            }
+
+            managerAccount.Login = string.IsNullOrEmpty(changeManagerProfileDto.Login) ? managerAccount.Login : changeManagerProfileDto.Login;
+            managerAccount.Password = string.IsNullOrEmpty(changeManagerProfileDto.Password) ? managerAccount.Password : changeManagerProfileDto.Password;
+            managerAccount.Username = string.IsNullOrEmpty(changeManagerProfileDto.Username) ? managerAccount.Username : changeManagerProfileDto.Username;
+
+            await _managerAccountRepository.Update(managerAccount);
         }
     }
 }

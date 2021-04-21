@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Abstractions;
 using Infrastructure.Verbatims;
+using Microsoft.Extensions.Logging;
 using Models.Db;
 using Models.Dtos;
 using Models.DTOs.Misc;
@@ -21,15 +22,18 @@ namespace Services.Implementations
         private ICourierAccountRepository _courierAccountRepository;
         private ILatLngRepository _latLngRepository;
 
+        private ILogger<DeliveryService> _logger;
+
         private IMapper _mapper;
 
-        public DeliveryService(IOrderRepository orderRepository, IDeliveryRepository deliveryRepository, ICourierAccountRepository courierAccountRepository, ILatLngRepository latLngRepository, IMapper mapper)
+        public DeliveryService(IOrderRepository orderRepository, IDeliveryRepository deliveryRepository, ICourierAccountRepository courierAccountRepository, ILatLngRepository latLngRepository, IMapper mapper, ILogger<DeliveryService> logger)
         {
             _orderRepository = orderRepository;
             _deliveryRepository = deliveryRepository;
             _courierAccountRepository = courierAccountRepository;
             _latLngRepository = latLngRepository;
             _mapper = mapper;
+            _logger = logger;
         }
         
         public async Task<CreatedDto> BeginDelivery(BeginDeliveryDto beginDeliveryDto)
@@ -66,6 +70,8 @@ namespace Services.Implementations
             await _deliveryRepository.Insert(delivery);
             
             // TODO: Notify
+            
+            _logger.LogInformation($"Began delivery {delivery.Id} for {order.Id} - Courier {courierAccount.Id}");
 
             return new CreatedDto(delivery.Id);
         }

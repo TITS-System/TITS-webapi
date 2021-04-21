@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Infrastructure.Abstractions;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,11 @@ namespace Infrastructure.Implementations
         public async Task<ICollection<Restaurant>> GetAll()
         {
             return await Context.Restaurants.ToListAsync();
+        }
+
+        public async Task<ICollection<Restaurant>> GetAllAutoDeliveryServed()
+        {
+            return await Context.Restaurants.Where(r => r.UseAutoDeliveryServer).ToListAsync();
         }
     }
 }

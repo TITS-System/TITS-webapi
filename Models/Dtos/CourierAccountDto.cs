@@ -7,5 +7,7 @@
         public string Username { get; set; }
 
         public bool IsOnWork { get; set; }
+
+        public LatLngDto LastLatLng { get; set; }
     }
 }

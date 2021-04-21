@@ -113,10 +113,16 @@ namespace TitsAPI
             app.UseRouting();
 
             app.UseCors(builder => builder
-                .AllowAnyOrigin()
+                .WithOrigins(
+                    "http://localhost:8080",
+                    "http://localhost:4200",
+                    "https://localhost:8443",
+                    "https://localhost:4200",
+                    "http://akiana.io:8080",
+                    "https://akiana.io:8443")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                //.AllowCredentials()
+                .AllowCredentials()
             );
 
             app.UseAuthentication();
@@ -130,6 +136,13 @@ namespace TitsAPI
 
                 endpoints.MapDefaultControllerRoute();
             });
+            
+            // serve index.html for everything not mapped
+            app.UseSpa(builder => { builder.Options.SourcePath = WWWRootPath; });
+
+            var autoDeliveryServerService = app.ApplicationServices.GetRequiredService<IAutoDeliveryServerService>();
+
+            autoDeliveryServerService.GetMode(1);
         }
     }
 }

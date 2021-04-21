@@ -25,7 +25,9 @@ namespace Infrastructure.Implementations
 
         public async Task<ICollection<CourierAccount>> GetByRestaurant(long restaurantId)
         {
-            return await Context.CourierAccounts.Where(wa => wa.AssignedToRestaurantId == restaurantId).ToListAsync();
+            return await Context.CourierAccounts
+                .Include(ca => ca.LastLatLng)
+                .Where(ca => ca.AssignedToRestaurantId == restaurantId).ToListAsync();
         }
 
         public async Task Update(CourierAccount courierAccount)

@@ -18,5 +18,7 @@ namespace Models.Db
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual ICollection<CourierAccount> AssignedCouriers { get; set; }
+
+        public bool UseAutoDeliveryServer { get; set; }
     }
 }

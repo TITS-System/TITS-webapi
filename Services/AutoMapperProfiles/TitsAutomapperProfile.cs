@@ -32,6 +32,8 @@ namespace Services.AutoMapperProfiles
 
             CreateMap<DeliveryDto, Delivery>().ReverseMap();
 
+            CreateMap<ManagerFullInfoDto, ManagerAccount>();
+
             CreateMap<UnservedOrderDto, Order>().ReverseMap();
             CreateMap<OrderDto, Order>().ReverseMap();
 

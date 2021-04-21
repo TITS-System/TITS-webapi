@@ -4,8 +4,8 @@ namespace Services.Abstractions
 {
     public interface IAutoDeliveryServerService
     {
-        Task SetAutoDeliveryMode(bool mode);
+        Task SetAutoDeliveryMode(long restaurantId, bool mode);
 
-        Task<bool> GetMode();
+        Task<bool> GetMode(long restaurantId);
     }
 }

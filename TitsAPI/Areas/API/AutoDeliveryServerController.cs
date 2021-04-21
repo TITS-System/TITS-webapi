@@ -18,11 +18,11 @@ namespace TitsAPI.Areas.API
         
         [HttpGet]
         [TypeFilter(typeof(ManagerTokenFilter))]
-        public async Task<ActionResult<bool>> GetState()
+        public async Task<ActionResult<bool>> GetState(long restaurantId)
         {
             try
             {
-                var mode = await _autoDeliveryServerService.GetMode();
+                var mode = await _autoDeliveryServerService.GetMode(restaurantId);
                 return mode;
             }
             catch (Exception ex)
@@ -33,11 +33,11 @@ namespace TitsAPI.Areas.API
         
         [HttpGet]
         [TypeFilter(typeof(ManagerTokenFilter))]
-        public async Task<ActionResult<bool>> Enable()
+        public async Task<ActionResult<bool>> Enable(long restaurantId)
         {
             try
             {
-                await _autoDeliveryServerService.SetAutoDeliveryMode(true);
+                await _autoDeliveryServerService.SetAutoDeliveryMode(restaurantId, true);
                 return Ok();
             }
             catch (Exception ex)
@@ -48,11 +48,11 @@ namespace TitsAPI.Areas.API
         
         [HttpGet]
         [TypeFilter(typeof(ManagerTokenFilter))]
-        public async Task<ActionResult<bool>> Disable()
+        public async Task<ActionResult<bool>> Disable(long restaurantId)
         {
             try
             {
-                await _autoDeliveryServerService.SetAutoDeliveryMode(false);
+                await _autoDeliveryServerService.SetAutoDeliveryMode(restaurantId, false);
                 return Ok();
             }
             catch (Exception ex)

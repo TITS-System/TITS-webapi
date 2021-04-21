@@ -4,11 +4,11 @@ namespace Models.Dtos
 {
     public class RestaurantsDto
     {
-        public ICollection<RestaurantDto> Restaurant { get; set; }
+        public ICollection<RestaurantDto> Restaurants { get; set; }
 
-        public RestaurantsDto(ICollection<RestaurantDto> restaurant)
+        public RestaurantsDto(ICollection<RestaurantDto> restaurants)
         {
-            Restaurant = restaurant;
+            Restaurants = restaurants;
         }
     }
 }

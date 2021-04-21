@@ -15,5 +15,7 @@ namespace Infrastructure.Abstractions
         Task Insert(Restaurant restaurant);
 
         Task<ICollection<Restaurant>> GetAll();
+        
+        Task<ICollection<Restaurant>> GetAllAutoDeliveryServed();
     }
 }

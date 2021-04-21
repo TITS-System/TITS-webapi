@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Infrastructure.Abstractions;
+using Microsoft.Extensions.Logging;
 using Models.Db;
 using Models.Db.Account;
 using Models.Dtos;
@@ -24,11 +25,11 @@ namespace Services.Implementations
         private IOrderService _orderService;
         private IDeliveryService _deliveryService;
 
-        private bool _autoDeliveryMode;
-
         private Thread _autoDeliveryServerThread;
 
-        public AutoDeliveryServerService(ICourierAccountService courierAccountService, IOrderService orderService, IDeliveryService deliveryService, IRestaurantService restaurantService, IOrderRepository orderRepository, IDeliveryRepository deliveryRepository, IRestaurantRepository restaurantRepository, ICourierAccountRepository courierAccountRepository)
+        private ILogger<AutoDeliveryServerService> _logger;
+
+        public AutoDeliveryServerService(ICourierAccountService courierAccountService, IOrderService orderService, IDeliveryService deliveryService, IRestaurantService restaurantService, IOrderRepository orderRepository, IDeliveryRepository deliveryRepository, IRestaurantRepository restaurantRepository, ICourierAccountRepository courierAccountRepository, ILogger<AutoDeliveryServerService> logger)
         {
             _courierAccountService = courierAccountService;
             _orderService = orderService;
@@ -38,6 +39,7 @@ namespace Services.Implementations
             _deliveryRepository = deliveryRepository;
             _restaurantRepository = restaurantRepository;
             _courierAccountRepository = courierAccountRepository;
+            _logger = logger;
 
             _autoDeliveryServerThread = new Thread(AutoDeliveryServerRoutine);
             _autoDeliveryServerThread.Start();
@@ -47,58 +49,75 @@ namespace Services.Implementations
         {
             while (Thread.CurrentThread.ThreadState != ThreadState.AbortRequested)
             {
-                if (_autoDeliveryMode)
+                // force wait while db context is initiating
+                Thread.Sleep(5000);
+                _logger.LogInformation("AutoDeliveryService - serving");
+                var restaurants = await _restaurantRepository.GetAllAutoDeliveryServed();
+                
+                _logger.LogInformation($"There are {restaurants.Count} restaurants with auto serving");
+
+                foreach (var restaurant in restaurants)
                 {
-                    var restaurants = await _restaurantRepository.GetAll();
-                    foreach (var restaurant in restaurants)
+                    var unservedOrders = await _orderRepository.GetUnserved(restaurant.Id);
+                    var couriers = await _courierAccountRepository.GetByRestaurant(restaurant.Id);
+
+                    // Select only couriers that are on work
+                    couriers = couriers.Where(c => c.LastCourierSessionId != null).ToList();
+
+                    // Order couriers
+                    var couriersLoad = new List<(CourierAccount courier, int load)>();
+
+                    foreach (var courier in couriers)
                     {
-                        var unservedOrders = await _orderRepository.GetUnserved(restaurant.Id);
-                        var couriers = await _courierAccountRepository.GetByRestaurant(restaurant.Id);
-                        
-                        // Select only couriers that are on work
-                        couriers = couriers.Where(c => c.LastCourierSessionId != null).ToList();
+                        var courierDeliveries = await _deliveryRepository.GetByCourierIdAndDate(courier.Id, DateTime.Today.AddDays(-2), DateTime.Today.AddDays(2));
 
-                        // Order couriers
-                        var couriersLoad = new List<(CourierAccount courier, int load)>();
+                        couriersLoad.Add((courier, courierDeliveries.Count(d => d.Status == DeliveryStatus.InProgress)));
+                    }
 
-                        foreach (var courier in couriers)
+                    var orderedCouriers = couriersLoad.OrderBy(cl => cl.load).Select(cl => cl.courier);
+
+                    var couriersQueue = new Queue<CourierAccount>(orderedCouriers);
+
+                    var unservedOrdersQueue = new Queue<Order>(unservedOrders);
+
+                    while (unservedOrdersQueue.Count > 0 && couriersQueue.Count > 0)
+                    {
+                        var unservedOrder = unservedOrdersQueue.Dequeue();
+                        var courier = couriersQueue.Dequeue();
+
+                        await _deliveryService.BeginDelivery(new BeginDeliveryDto()
                         {
-                            var courierDeliveries = await _deliveryRepository.GetByCourierIdAndDate(courier.Id, DateTime.Today.AddDays(-2), DateTime.Today.AddDays(2));
-
-                            couriersLoad.Add((courier, courierDeliveries.Count(d => d.Status == DeliveryStatus.InProgress)));
-                        }
-
-                        var orderedCouriers = couriersLoad.OrderBy(cl => cl.load).Select(cl => cl.courier);
-
-                        var couriersQueue = new Queue<CourierAccount>(orderedCouriers);
-
-                        var unservedOrdersQueue = new Queue<Order>(unservedOrders); 
-
-                        while (unservedOrdersQueue.Count > 0)
-                        {
-                            var unservedOrder = unservedOrdersQueue.Dequeue();
-                            var courier = couriersQueue.Dequeue();
-
-                            await _deliveryService.BeginDelivery(new BeginDeliveryDto()
-                            {
-                                CourierId = courier.Id,
-                                OrderId = unservedOrder.Id
-                            });
-                        }
+                            CourierId = courier.Id,
+                            OrderId = unservedOrder.Id
+                        });
                     }
                 }
-                Thread.Sleep(5000);
             }
         }
 
-        public async Task SetAutoDeliveryMode(bool mode)
+        public async Task SetAutoDeliveryMode(long restaurantId, bool mode)
         {
-            _autoDeliveryMode = mode;
+            var restaurant = await _restaurantRepository.GetById(restaurantId);
+
+            if (restaurant == null)
+            {
+                throw new("Restaurant not found");
+            }
+
+            restaurant.UseAutoDeliveryServer = mode;
+            await _restaurantRepository.Update(restaurant);
         }
 
-        public async Task<bool> GetMode()
+        public async Task<bool> GetMode(long restaurantId)
         {
-            return _autoDeliveryMode;
+            var restaurant = await _restaurantRepository.GetById(restaurantId);
+
+            if (restaurant == null)
+            {
+                throw new("Restaurant not found");
+            }
+
+            return restaurant.UseAutoDeliveryServer;
         }
     }
 }
