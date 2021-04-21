@@ -35,6 +35,7 @@ namespace Services.Implementations
             var courierAccounts = await _courierAccountRepository.GetByRestaurant(restaurantId);
             
             var workerAccountDtos = _mapper.Map<ICollection<CourierAccountDto>>(courierAccounts);
+            
             return new GetCouriersResultDto(workerAccountDtos);
         }
 

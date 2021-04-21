@@ -12,8 +12,10 @@ namespace Services.Abstractions
         
         Task AssignToRestaurant(AssignToRestaurantDto assignToRestaurantDto);
 
+        Task<CourierFullInfoDto> GetFullInfo(long courierId);
+
         Task<GetRolesResultDto> GetRoles(long courierId);
 
-        Task ChangeCourierData(ChangeAccountDataDto changeAccountDataDto);
+        Task ChangeCourierProfile(ChangeCourierProfileDto changeCourierProfileDto);
     }
 }

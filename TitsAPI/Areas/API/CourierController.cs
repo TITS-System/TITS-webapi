@@ -84,13 +84,28 @@ namespace TitsAPI.Areas.API
             }
         }
 
-        [HttpPost]
-        [TypeFilter(typeof(CourierTokenFilter))]
-        public async Task<ActionResult> ChangeAccountData([FromBody] ChangeAccountDataDto changeAccountDataDto)
+        [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<CourierFullInfoDto>> GetFullInfo(long courierId)
         {
             try
             {
-                await _courierAccountService.ChangeCourierData(changeAccountDataDto);
+                var courierFullInfoDto = await _courierAccountService.GetFullInfo(courierId);
+                return courierFullInfoDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+        
+        [HttpPost]
+        [TypeFilter(typeof(CourierTokenFilter))]
+        public async Task<ActionResult> ChangeProfile([FromBody] ChangeCourierProfileDto changeCourierProfileDto)
+        {
+            try
+            {
+                await _courierAccountService.ChangeCourierProfile(changeCourierProfileDto);
                 return Ok();
             }
             catch (Exception ex)

@@ -85,6 +85,20 @@ namespace Services.Implementations
             await _courierAccountRepository.Update(courierAccount);
         }
 
+        public async Task<CourierFullInfoDto> GetFullInfo(long courierId)
+        {
+            var courierAccount = await _courierAccountRepository.GetById(courierId);
+
+            if (courierAccount == null)
+            {
+                throw new(MessagesVerbatim.AccountNotFound);
+            }
+
+            var courierFullInfoDto = _mapper.Map<CourierFullInfoDto>(courierAccount);
+
+            return courierFullInfoDto;
+        }
+
         public async Task<GetRolesResultDto> GetRoles(long courierId)
         {
             var courierAccount = await _courierAccountRepository.GetById(courierId);
@@ -101,18 +115,18 @@ namespace Services.Implementations
             return new GetRolesResultDto(roleDtos);
         }
 
-        public async Task ChangeCourierData(ChangeAccountDataDto changeAccountDataDto)
+        public async Task ChangeCourierProfile(ChangeCourierProfileDto changeCourierProfileDto)
         {
-            var courierAccount = await _courierAccountRepository.GetById(changeAccountDataDto.CourierId);
+            var courierAccount = await _courierAccountRepository.GetById(changeCourierProfileDto.CourierId);
 
             if (courierAccount == null)
             {
                 throw new(MessagesVerbatim.AccountNotFound);
             }
 
-            courierAccount.Login = changeAccountDataDto.Login;
-            courierAccount.Password = changeAccountDataDto.Password;
-            courierAccount.Username = changeAccountDataDto.Username;
+            courierAccount.Login = string.IsNullOrEmpty(changeCourierProfileDto.Login) ? courierAccount.Login : changeCourierProfileDto.Login;
+            courierAccount.Password = string.IsNullOrEmpty(changeCourierProfileDto.Password) ? courierAccount.Password : changeCourierProfileDto.Password;
+            courierAccount.Username = string.IsNullOrEmpty(changeCourierProfileDto.Username) ? courierAccount.Username : changeCourierProfileDto.Username;
 
             await _courierAccountRepository.Update(courierAccount);
         }

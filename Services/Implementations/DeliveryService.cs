@@ -159,7 +159,7 @@ namespace Services.Implementations
                 getByCourierAndDateDto.EndTime
             );
 
-            var deliveryDtos = deliveries.Select(d => new DeliveryDto(d.OrderId, d.CourierAccountId)).ToList();
+            var deliveryDtos = _mapper.Map<ICollection<DeliveryDto>>(deliveries);
 
             return new DeliveriesDto(deliveryDtos);
         }
