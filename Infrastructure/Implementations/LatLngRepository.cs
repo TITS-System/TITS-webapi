@@ -30,15 +30,32 @@ namespace Infrastructure.Implementations
             await Context.SaveChangesAsync();
         }
 
+        public async Task Remove(ICollection<LatLng> latLngs)
+        {
+            Context.LatLngs.RemoveRange(latLngs);
+            await Context.SaveChangesAsync();
+        }
+
         public async Task Insert(LatLng latLng)
         {
             Context.LatLngs.Add(latLng);
             await Context.SaveChangesAsync();
         }
 
-        public async Task<ICollection<LatLng>> GetLocations(long deliveryId)
+        public async Task Insert(ICollection<LatLng> latLngs)
+        {
+            Context.AddRange(latLngs);
+            await Context.SaveChangesAsync();
+        }
+
+        public async Task<ICollection<LatLng>> GetAllByDelivery(long deliveryId)
         {
             return await Context.LatLngs.Where(ll => ll.DeliveryId == deliveryId).ToListAsync();
+        }
+
+        public async Task<ICollection<LatLng>> GetAllByZone(long zoneId)
+        {
+            return await Context.LatLngs.Where(ll => ll.ZoneId == zoneId).ToListAsync();
         }
     }
 }

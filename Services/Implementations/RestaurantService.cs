@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Infrastructure.Abstractions;
+using Models.Db;
 using Models.Dtos;
 using Services.Abstractions;
 

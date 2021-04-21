@@ -11,9 +11,15 @@ namespace Infrastructure.Abstractions
         Task Update(LatLng latLng);
 
         Task Remove(LatLng latLng);
+        
+        Task Remove(ICollection<LatLng> latLngs);
 
         Task Insert(LatLng latLng);
+        
+        Task Insert(ICollection<LatLng> latLngs);
 
-        Task<ICollection<LatLng>> GetLocations(long deliveryId);
+        Task<ICollection<LatLng>> GetAllByDelivery(long deliveryId);
+        
+        Task<ICollection<LatLng>> GetAllByZone(long zoneId);
     }
 }

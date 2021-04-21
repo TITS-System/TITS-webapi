@@ -61,6 +61,7 @@ namespace TitsAPI
             services.AddScoped<ICourierSessionRepository, CourierSessionRepository>();
             services.AddScoped<ICourierMessageRepository, CourierMessageRepository>();
             services.AddScoped<ISosRequestRepository, SosRequestRepository>();
+            services.AddScoped<IZoneRepository, ZoneRepository>();
 
             // Add Services
             services.AddScoped<ITokenSessionService, TokenSessionService>();
@@ -73,6 +74,7 @@ namespace TitsAPI
             services.AddScoped<IRestaurantService, RestaurantService>();
             services.AddScoped<IMessagingService, MessagingService>();
             services.AddScoped<ISosService, SosService>();
+            services.AddScoped<IZoneService, ZoneService>();
             
             services.AddSingleton<IAutoDeliveryServerService, AutoDeliveryServerService>();
 

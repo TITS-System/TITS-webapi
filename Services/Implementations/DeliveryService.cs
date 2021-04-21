@@ -85,7 +85,7 @@ namespace Services.Implementations
                 throw new("Delivery no found");
             }
 
-            var latLngs = await _latLngRepository.GetLocations(deliveryId);
+            var latLngs = await _latLngRepository.GetAllByDelivery(deliveryId);
 
             var latLngsDto = new LatLngsDto(_mapper.Map<ICollection<LatLngDto>>(latLngs));
             return latLngsDto;

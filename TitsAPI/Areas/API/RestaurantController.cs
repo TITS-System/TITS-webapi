@@ -11,9 +11,12 @@ namespace TitsAPI.Areas.API
     public class RestaurantController : TitsController
     {
         private IRestaurantService _restaurantService;
-        public RestaurantController(ITokenSessionService tokenSessionService, IRestaurantService restaurantService) : base(tokenSessionService)
+        private IZoneService _zoneService;
+
+        public RestaurantController(ITokenSessionService tokenSessionService, IRestaurantService restaurantService, IZoneService zoneService) : base(tokenSessionService)
         {
             _restaurantService = restaurantService;
+            _zoneService = zoneService;
         }
 
         [HttpGet]
@@ -30,7 +33,7 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
-        
+
         [HttpGet]
         [TypeFilter(typeof(ManagerTokenFilter))]
         public async Task<ActionResult<RestaurantsDto>> GetAll()
@@ -39,6 +42,36 @@ namespace TitsAPI.Areas.API
             {
                 var restaurantsDto = await _restaurantService.GetAll();
                 return restaurantsDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<LatLngsDto>> GetZone(long restaurantId)
+        {
+            try
+            {
+                var latLngsDto = await _zoneService.GetRestaurantZone(restaurantId);
+                return latLngsDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<LatLngsDto>> SetZone([FromBody] SetRestaurantZoneDto setRestaurantZoneDto)
+        {
+            try
+            {
+                await _zoneService.SetRestaurantZone(setRestaurantZoneDto);
+                return Ok();
             }
             catch (Exception ex)
             {

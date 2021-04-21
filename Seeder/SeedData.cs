@@ -27,6 +27,7 @@ namespace Seeder
 
         private IRestaurantRepository _restaurantRepository;
         private ILatLngRepository _latLngRepository;
+        private IZoneRepository _zoneRepository;
         private DeliveryService _deliveryService;
         private OrderService _orderService;
 
@@ -44,6 +45,7 @@ namespace Seeder
             var restaurantRepository = new RestaurantRepository(Context);
             var sosRequestRepository = new SosRequestRepository(Context);
             var orderRepository = new OrderRepository(Context);
+            _zoneRepository = new ZoneRepository(Context);
             var deliveryRepository = new DeliveryRepository(Context);
             _restaurantRepository = restaurantRepository;
             _latLngRepository = new LatLngRepository(Context);
@@ -69,12 +71,18 @@ namespace Seeder
             var latLng = new LatLng() {Lat = 53.26324200333876f, Lng = 34.34160463381722f};
             await _latLngRepository.Insert(latLng);
 
+
+            var zone = await SeedZone();
+
             // Save it with a relation
-            var restaurant = new Restaurant() {LocationLatLngId = latLng.Id, AddressString = "ул. Крахмалева, 49, Брянск, Брянская обл., 241050"};
+            var restaurant = new Restaurant() {LocationLatLngId = latLng.Id, AddressString = "ул. Крахмалева, 49, Брянск, Брянская обл., 241050", ZoneId = zone.Id};
             await _restaurantRepository.Insert(restaurant);
 
+            zone.RestaurantId = restaurant.Id;
+            await _zoneRepository.Update(zone);
+
             // Save back reference id
-            latLng.RestaurantId = restaurant.Id;
+            latLng.RestaurantLocationId = restaurant.Id;
             await _latLngRepository.Update(latLng);
 
             var courierId = (await _courierAccountService.CreateCourier(new CreateCourierAccountDto() {Login = "Courier", Password = "Courier", Username = "Misha", RestaurantId = restaurant.Id})).Id;
@@ -100,6 +108,25 @@ namespace Seeder
             );
             Context.SaveChanges();
             Console.WriteLine("Seeded account roles");
+        }
+
+        private async Task<Zone> SeedZone()
+        {
+            Zone zone = new Zone();
+
+            await _zoneRepository.Insert(zone);
+            
+            // {lat:53.263692, lng:34.339379},{lat:53.263769, lng: 34.344400},{lat:53.261696, lng:34.344690},{lat:53.260977, lng:34.340087}
+            LatLng[] points = {
+                new() {Lat = 53.263692f, Lng = 34.339379f, ZoneId = zone.Id},
+                new() {Lat = 53.263769f, Lng = 34.344400f, ZoneId = zone.Id},
+                new() {Lat = 53.261696f, Lng = 34.344690f, ZoneId = zone.Id},
+                new() {Lat = 53.260977f, Lng = 34.340087f, ZoneId = zone.Id},
+            };
+
+            await _latLngRepository.Insert(points);
+
+            return zone;
         }
     }
 }

@@ -19,6 +19,12 @@ namespace Models.Db
 
         public virtual ICollection<CourierAccount> AssignedCouriers { get; set; }
 
+        // Can't be null, it's always bound to zone
+        [ForeignKey(nameof(Zone))]
+        public long? ZoneId { get; set; }
+
+        public virtual Zone Zone { get; set; }
+
         public bool UseAutoDeliveryServer { get; set; }
     }
 }

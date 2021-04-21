@@ -14,14 +14,19 @@ namespace Models.Db
         
         public virtual Order Order { get; set; }
         
-        [ForeignKey(nameof(Restaurant))]
-        public long? RestaurantId { get; set; }
+        [ForeignKey(nameof(RestaurantLocation))]
+        public long? RestaurantLocationId { get; set; }
         
-        public virtual Restaurant Restaurant { get; set; }
+        public virtual Restaurant RestaurantLocation { get; set; }
 
         [ForeignKey(nameof(Delivery))]
         public long? DeliveryId { get; set; }
 
         public virtual Delivery Delivery { get; set; }
+
+        [ForeignKey(nameof(Zone))]
+        public long? ZoneId { get; set; }
+
+        public virtual Zone Zone { get; set; }
     }
 }

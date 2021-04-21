@@ -31,6 +31,7 @@ namespace Infrastructure
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<AccountToRole>().HasKey(atr => new {atr.WorkerRoleId, atr.WorkerAccountId});
+
             // modelBuilder.Entity<LatLng>().HasOne(atr => atr.Order).WithOne(o => o.DestinationLatLng).IsRequired(false).HasForeignKey<LatLng>(latlng => latlng.OrderId);
             // modelBuilder.Entity<LatLng>().HasOne(atr => atr.Restaurant).WithOne(r => r.LocationLatLng).IsRequired(false).HasForeignKey<LatLng>(latlng => latlng.RestaurantId);
             // modelBuilder.Entity<LatLng>().HasOne(atr => atr.Delivery).WithMany(d => d.LatLngs).IsRequired(false).HasForeignKey(latlng => latlng.DeliveryId);
@@ -52,6 +53,7 @@ namespace Infrastructure
         public DbSet<WorkerRole> WorkerRoles { get; set; }
 
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Zone> Zones { get; set; }
 
         public DbSet<Delivery> Deliveries { get; set; }
         public DbSet<LatLng> LatLngs { get; set; }

@@ -3,15 +3,17 @@ using System;
 using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Data.Migrations
 {
     [DbContext(typeof(TitsDbContext))]
-    partial class TitsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210421160139_AddRestaurantZone")]
+    partial class AddRestaurantZone
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,7 +191,7 @@ namespace Infrastructure.Data.Migrations
                     b.Property<long?>("RestaurantLocationId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("ZoneId")
+                    b.Property<long?>("RestaurantZoneId")
                         .HasColumnType("bigint");
 
                     b.HasKey("Id");
@@ -198,9 +200,7 @@ namespace Infrastructure.Data.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("RestaurantLocationId");
-
-                    b.HasIndex("ZoneId");
+                    b.HasIndex("RestaurantZoneId");
 
                     b.ToTable("LatLngs");
                 });
@@ -256,14 +256,10 @@ namespace Infrastructure.Data.Migrations
                     b.Property<bool>("UseAutoDeliveryServer")
                         .HasColumnType("boolean");
 
-                    b.Property<long?>("ZoneId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("LocationLatLngId");
-
-                    b.HasIndex("ZoneId");
+                    b.HasIndex("LocationLatLngId")
+                        .IsUnique();
 
                     b.ToTable("Restaurants");
                 });
@@ -321,23 +317,6 @@ namespace Infrastructure.Data.Migrations
                     b.ToTable("TokenSessions");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("TokenSessionBase");
-                });
-
-            modelBuilder.Entity("Models.Db.Zone", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<long?>("RestaurantId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RestaurantId");
-
-                    b.ToTable("Zones");
                 });
 
             modelBuilder.Entity("Models.Db.Account.CourierAccount", b =>
@@ -478,21 +457,16 @@ namespace Infrastructure.Data.Migrations
                         .WithMany()
                         .HasForeignKey("OrderId");
 
-                    b.HasOne("Models.Db.Restaurant", "RestaurantLocation")
-                        .WithMany()
-                        .HasForeignKey("RestaurantLocationId");
-
-                    b.HasOne("Models.Db.Zone", "Zone")
-                        .WithMany("LatLngs")
-                        .HasForeignKey("ZoneId");
+                    b.HasOne("Models.Db.Restaurant", "RestaurantZone")
+                        .WithMany("ZoneLatLngs")
+                        .HasForeignKey("RestaurantZoneId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Delivery");
 
                     b.Navigation("Order");
 
-                    b.Navigation("RestaurantLocation");
-
-                    b.Navigation("Zone");
+                    b.Navigation("RestaurantZone");
                 });
 
             modelBuilder.Entity("Models.Db.Order", b =>
@@ -517,18 +491,12 @@ namespace Infrastructure.Data.Migrations
             modelBuilder.Entity("Models.Db.Restaurant", b =>
                 {
                     b.HasOne("Models.Db.LatLng", "LocationLatLng")
-                        .WithMany()
-                        .HasForeignKey("LocationLatLngId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("RestaurantLocation")
+                        .HasForeignKey("Models.Db.Restaurant", "LocationLatLngId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("Models.Db.Zone", "Zone")
-                        .WithMany()
-                        .HasForeignKey("ZoneId");
-
                     b.Navigation("LocationLatLng");
-
-                    b.Navigation("Zone");
                 });
 
             modelBuilder.Entity("Models.Db.SosRequest", b =>
@@ -546,15 +514,6 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("CourierAccount");
 
                     b.Navigation("ResolverManagerAccount");
-                });
-
-            modelBuilder.Entity("Models.Db.Zone", b =>
-                {
-                    b.HasOne("Models.Db.Restaurant", "Restaurant")
-                        .WithMany()
-                        .HasForeignKey("RestaurantId");
-
-                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("Models.Db.Account.CourierAccount", b =>
@@ -632,6 +591,11 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("LatLngs");
                 });
 
+            modelBuilder.Entity("Models.Db.LatLng", b =>
+                {
+                    b.Navigation("RestaurantLocation");
+                });
+
             modelBuilder.Entity("Models.Db.Order", b =>
                 {
                     b.Navigation("Deliveries");
@@ -642,11 +606,8 @@ namespace Infrastructure.Data.Migrations
                     b.Navigation("AssignedCouriers");
 
                     b.Navigation("Orders");
-                });
 
-            modelBuilder.Entity("Models.Db.Zone", b =>
-                {
-                    b.Navigation("LatLngs");
+                    b.Navigation("ZoneLatLngs");
                 });
 
             modelBuilder.Entity("Models.Db.Account.CourierAccount", b =>
