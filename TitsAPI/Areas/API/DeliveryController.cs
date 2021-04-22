@@ -120,7 +120,22 @@ namespace TitsAPI.Areas.API
 
         [HttpGet]
         [TypeFilter(typeof(CourierTokenFilter))]
-        public async Task<ActionResult<LatLngsDto>> GetLocations(long deliveryId)
+        public async Task<ActionResult<LatLngsDto>> CGetLocations(long deliveryId)
+        {
+            try
+            {
+                var latLngsDto = await _deliveryService.GetDeliveryLocations(deliveryId);
+                return latLngsDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+        
+        [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<LatLngsDto>> MGetLocations(long deliveryId)
         {
             try
             {
