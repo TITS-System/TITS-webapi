@@ -71,7 +71,7 @@ namespace Services.Implementations
             
             // TODO: Notify
             
-            _logger.LogInformation($"Began delivery {delivery.Id} for {order.Id} - Courier {courierAccount.Id}");
+            _logger.LogCritical($"Began delivery {delivery.Id} for {order.Id} - Courier {courierAccount.Id}");
 
             return new CreatedDto(delivery.Id);
         }

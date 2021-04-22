@@ -109,7 +109,7 @@ namespace TitsAPI.Areas.API
                     throw new("No orderId passed");
                 }
                 
-                var deliveriesDto = await _deliveryService.GetInProgressByCourier(orderId.Value);
+                var deliveriesDto = await _deliveryService.GetAllByOrder(orderId.Value);
                 return deliveriesDto;
             }
             catch (Exception ex)

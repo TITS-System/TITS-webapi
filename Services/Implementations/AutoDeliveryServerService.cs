@@ -51,18 +51,15 @@ namespace Services.Implementations
             {
                 // force wait while db context is initiating
                 Thread.Sleep(5000);
-                _logger.LogInformation("AutoDeliveryService - serving");
+                _logger.LogWarning("AutoDeliveryService - serving");
                 var restaurants = await _restaurantRepository.GetAllAutoDeliveryServed();
                 
-                _logger.LogInformation($"There are {restaurants.Count} restaurants with auto serving");
+                _logger.LogWarning($"There are {restaurants.Count} restaurants with auto serving");
 
                 foreach (var restaurant in restaurants)
                 {
                     var unservedOrders = await _orderRepository.GetUnserved(restaurant.Id);
-                    var couriers = await _courierAccountRepository.GetByRestaurant(restaurant.Id);
-
-                    // Select only couriers that are on work
-                    couriers = couriers.Where(c => c.LastCourierSessionId != null).ToList();
+                    var couriers = await _courierAccountRepository.GetByRestaurantAndOnWork(restaurant.Id);
 
                     // Order couriers
                     var couriersLoad = new List<(CourierAccount courier, int load)>();

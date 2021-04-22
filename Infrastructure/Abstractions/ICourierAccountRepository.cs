@@ -11,6 +11,8 @@ namespace Infrastructure.Abstractions
         Task<CourierAccount> GetByLogin(string login);
         
         Task<ICollection<CourierAccount>> GetByRestaurant(long restaurantId);
+        
+        Task<ICollection<CourierAccount>> GetByRestaurantAndOnWork(long restaurantId);
 
         Task Update(CourierAccount courierAccount);
 

@@ -30,6 +30,13 @@ namespace Infrastructure.Implementations
                 .Where(ca => ca.AssignedToRestaurantId == restaurantId).ToListAsync();
         }
 
+        public async Task<ICollection<CourierAccount>> GetByRestaurantAndOnWork(long restaurantId)
+        {
+            return await Context.CourierAccounts
+                .Include(ca => ca.LastLatLng)
+                .Where(ca => ca.AssignedToRestaurantId == restaurantId && ca.LastCourierSessionId != null).ToListAsync();
+        }
+
         public async Task Update(CourierAccount courierAccount)
         {
             Context.CourierAccounts.Update(courierAccount);

@@ -50,43 +50,59 @@ namespace Services.Implementations
             var averageDistance = 0f;
 
             var deliveryDistances = new List<float>();
-            if (deliveryDistances.Count > 0)
+
+            foreach (var delivery in deliveries)
             {
-                foreach (var delivery in deliveries)
+                var latLngs = await _latLngRepository.GetAllByDelivery(delivery.Id);
+
+                latLngs = latLngs.ToList();
+
+                var deliveryDistance = 0f;
+
+                for (int i = 0; i < latLngs.Count - 1; i++)
                 {
-                    var latLngs = await _latLngRepository.GetAllByDelivery(delivery.Id);
-
-                    var deliveryDistance = 0f;
-
-                    for (int i = 0; i < latLngs.Count - 1; i++)
-                    {
-                        deliveryDistance += GetDistance(latLngs.ElementAt(i), latLngs.ElementAt(i + 1));
-                    }
-
-                    var latLngDtos = _mapper.Map<ICollection<LatLngDto>>(latLngs);
-
-                    paths.Add(latLngDtos);
-                    deliveryDistances.Add(deliveryDistance);
+                    deliveryDistance += GetDistance(latLngs.ElementAt(i), latLngs.ElementAt(i + 1));
                 }
 
-                deliveryDistances.Sum();
+                var latLngDtos = _mapper.Map<ICollection<LatLngDto>>(latLngs);
+
+                paths.Add(latLngDtos);
+                deliveryDistances.Add(deliveryDistance);
+            }
+
+            if (deliveryDistances.Count > 0)
+            {
+                totalDeliveryDistance = deliveryDistances.Sum();
                 averageDistance = deliveryDistances.Average();
             }
 
-            var deliveryTimes = deliveries
+            var canceledTimes = deliveries
+                .Where(d => d.Status == DeliveryStatus.Canceled)
+                .Select(d => d.EndTime.Value - d.StartTime)
+                .Select(ts => (float)ts.TotalSeconds);
+
+            var finishedTimes = deliveries
                 .Where(d => d.Status == DeliveryStatus.Finished)
                 .Select(d => d.EndTime.Value - d.StartTime)
+                .Select(ts => (float)ts.TotalSeconds);
+
+            var inProgressTimes = deliveries
+                .Where(d => d.Status == DeliveryStatus.InProgress)
+                .Select(d => DateTime.Now - d.StartTime)
                 .Select(ts => (float)ts.TotalSeconds);
 
             var averageDeliveryTime = 0f;
             var totalDeliveryTime = 0f;
             var averageSpeed = 0f;
-            if (deliveryTimes.Any())
+            if (inProgressTimes.Any() || canceledTimes.Any() || finishedTimes.Any())
             {
-                averageDeliveryTime = deliveryTimes.Average();
+                averageDeliveryTime += inProgressTimes.Concat(canceledTimes).Concat(finishedTimes).Average();
 
-                totalDeliveryTime = deliveryTimes.Sum();
+                totalDeliveryTime += inProgressTimes.Concat(canceledTimes).Concat(finishedTimes).Sum();
+            }
 
+            if (totalDeliveryTime != 0)
+            {
                 averageSpeed = totalDeliveryDistance / totalDeliveryTime;
             }
 
