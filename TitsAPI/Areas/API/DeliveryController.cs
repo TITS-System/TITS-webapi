@@ -99,6 +99,26 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<DeliveriesDto>> GetByOrder(long? orderId)
+        {
+            try
+            {
+                if (orderId == null)
+                {
+                    throw new("No orderId passed");
+                }
+                
+                var deliveriesDto = await _deliveryService.GetInProgressByCourier(orderId.Value);
+                return deliveriesDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+
+        [HttpGet]
         [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult<LatLngsDto>> GetLocations(long deliveryId)
         {

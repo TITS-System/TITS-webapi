@@ -18,7 +18,22 @@ namespace TitsAPI.Areas.API
         
         [HttpGet]
         [TypeFilter(typeof(ManagerTokenFilter))]
-        public async Task<ActionResult<StatsDto>> GetStats(long courierId)
+        public async Task<ActionResult<StatsDto>> MGetStats(long courierId)
+        {
+            try
+            {
+                var statsDto = await _statsService.BuildStats(courierId);
+                return statsDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+        
+        [HttpGet]
+        [TypeFilter(typeof(CourierTokenFilter))]
+        public async Task<ActionResult<StatsDto>> CGetStats(long courierId)
         {
             try
             {

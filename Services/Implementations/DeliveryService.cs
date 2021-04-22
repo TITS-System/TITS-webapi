@@ -185,5 +185,21 @@ namespace Services.Implementations
 
             return new DeliveriesDto(deliveryDtos);
         }
+
+        public async Task<DeliveriesDto> GetAllByOrder(long orderId)
+        {
+            var order = await _orderRepository.GetById(orderId);
+
+            if (order == null)
+            {
+                throw new("Order not found");
+            }
+
+            var deliveries = await _deliveryRepository.GetByOrderId(orderId);
+
+            var deliveryDtos = _mapper.Map<ICollection<DeliveryDto>>(deliveries);
+
+            return new DeliveriesDto(deliveryDtos);
+        }
     }
 }

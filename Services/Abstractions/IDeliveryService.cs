@@ -20,6 +20,8 @@ namespace Services.Abstractions
         Task<DeliveriesDto> GetAllByCourierAndDate(GetByCourierAndDateDto getByCourierAndDateDto);
         
         Task<DeliveriesDto> GetInProgressByCourier(long courierId);
+        
+        Task<DeliveriesDto> GetAllByOrder(long orderId);
 
 
         // TODO: Get Courier Open Deliveries

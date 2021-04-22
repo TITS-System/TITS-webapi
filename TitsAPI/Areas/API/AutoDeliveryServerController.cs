@@ -33,7 +33,7 @@ namespace TitsAPI.Areas.API
 
         [HttpGet]
         [TypeFilter(typeof(ManagerTokenFilter))]
-        public async Task<ActionResult<bool>> Enable(long restaurantId)
+        public async Task<ActionResult> Enable(long restaurantId)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace TitsAPI.Areas.API
 
         [HttpGet]
         [TypeFilter(typeof(ManagerTokenFilter))]
-        public async Task<ActionResult<bool>> Disable(long restaurantId)
+        public async Task<ActionResult> Disable(long restaurantId)
         {
             try
             {
