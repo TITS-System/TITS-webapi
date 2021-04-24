@@ -22,7 +22,13 @@ namespace Infrastructure.Implementations
 
         public async Task<ICollection<Delivery>> GetByOrderId(long orderId)
         {
-            return await Context.Deliveries.Where(d => d.OrderId == orderId).ToListAsync();
+            return await Context.Deliveries
+                .Include(d => d.CourierAccount).Where(d => d.OrderId == orderId).ToListAsync();
+        }
+
+        public async Task<ICollection<Delivery>> GetByRestaurantId(long restaurantId)
+        {
+            return await Context.Deliveries.Where(d => d.Order.RestaurantId == restaurantId).ToListAsync();
         }
 
         public async Task<ICollection<Delivery>> GetByCourierIdAndDate(long courierId, DateTime startTime, DateTime endTime)

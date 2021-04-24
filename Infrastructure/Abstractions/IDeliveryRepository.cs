@@ -11,6 +11,8 @@ namespace Infrastructure.Abstractions
         
         Task<ICollection<Delivery>> GetByOrderId(long orderId);
         
+        Task<ICollection<Delivery>> GetByRestaurantId(long restaurantId);
+        
         Task<ICollection<Delivery>> GetByCourierIdAndDate(long courierId, DateTime startTime, DateTime endTime);
         
         Task<ICollection<Delivery>> GetInProgressByCourier(long courierId);

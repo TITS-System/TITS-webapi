@@ -32,6 +32,8 @@ namespace Models.Db.Account
         
         public virtual ICollection<SosRequest> SosRequests { get; set; }
 
+        public bool IsDeleted { get; set; }
+        
         // public virtual ICollection<Order> CreatedOrders { get; set; }
     }
 }

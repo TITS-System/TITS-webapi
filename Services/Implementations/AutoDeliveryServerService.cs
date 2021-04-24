@@ -50,7 +50,7 @@ namespace Services.Implementations
             while (Thread.CurrentThread.ThreadState != ThreadState.AbortRequested)
             {
                 // force wait while db context is initiating
-                Thread.Sleep(5000);
+                await Task.Delay(5000);
                 _logger.LogWarning("AutoDeliveryService - serving");
                 var restaurants = await _restaurantRepository.GetAllAutoDeliveryServed();
                 

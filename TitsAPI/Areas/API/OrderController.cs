@@ -12,6 +12,7 @@ namespace TitsAPI.Areas.API
     public class OrderController : TitsController
     {
         private IOrderService _orderService;
+
         public OrderController(ITokenSessionService tokenSessionService, IOrderService orderService) : base(tokenSessionService)
         {
             _orderService = orderService;
@@ -30,7 +31,7 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
-        
+
         [HttpGet]
         [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult<GetUnservedOrdersResultDto>> GetUnserved(long restaurantId)
@@ -45,7 +46,7 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
-        
+
         [HttpGet]
         [TypeFilter(typeof(ManagerTokenFilter))]
         public async Task<ActionResult<OrdersDto>> GetAllByRestaurant(long restaurantId)
@@ -60,7 +61,7 @@ namespace TitsAPI.Areas.API
                 return TitsError(ex.Message);
             }
         }
-        
+
         [HttpGet]
         [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult<OrderDto>> GetInfo(long orderId)
@@ -69,6 +70,35 @@ namespace TitsAPI.Areas.API
             {
                 var orderDto = await _orderService.GetInfo(orderId);
                 return orderDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<OrderDto>> MGetInfo(long orderId)
+        {
+            try
+            {
+                var orderDto = await _orderService.GetInfo(orderId);
+                return orderDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SeedOrder()
+        {
+            try
+            {
+                await _orderService.Create(new CreateOrderDto(1, "Пицца маргарита", "Ulitsa Bezhitskaya, 14, Bryansk, Bryansk Oblast, 241036", "Аудитория 1", new LatLngDto() {Lat = 53.30440121711519f, Lng = 34.30663108022984f}));
+                return Ok();
             }
             catch (Exception ex)
             {

@@ -119,6 +119,26 @@ namespace TitsAPI.Areas.API
         }
 
         [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<DeliveriesDto>> GetByRestaurantId(long? restaurantId)
+        {
+            try
+            {
+                if (restaurantId == null)
+                {
+                    throw new("No restaurantId passed");
+                }
+                
+                var deliveriesDto = await _deliveryService.GetAllByRestaurant(restaurantId.Value);
+                return deliveriesDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+
+        [HttpGet]
         [TypeFilter(typeof(CourierTokenFilter))]
         public async Task<ActionResult<LatLngsDto>> CGetLocations(long deliveryId)
         {

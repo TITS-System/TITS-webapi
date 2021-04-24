@@ -34,14 +34,18 @@ namespace Services.AutoMapperProfiles
                     cfg => cfg.Ignore())
                 .ReverseMap();
 
-            CreateMap<DeliveryDto, Delivery>().ReverseMap();
+            CreateMap<Delivery, DeliveryDto>().ForMember(dto => dto.CourierUsername, cfg => cfg.MapFrom(o => o.CourierAccount.Username)).ReverseMap();
 
             CreateMap<ManagerFullInfoDto, ManagerAccount>().ReverseMap();
+            CreateMap<CourierFullInfoDto, CourierAccount>().ReverseMap();
 
             CreateMap<UnservedOrderDto, Order>().ReverseMap();
             CreateMap<OrderDto, Order>().ReverseMap();
 
-            CreateMap<CourierAccount, CourierAccountDto>().ReverseMap();
+            CreateMap<CourierAccount, CourierAccountDto>().ForMember(
+                dto => dto.IsOnWork,
+                cfg => cfg.MapFrom(a => a.LastCourierSessionId)
+            ).ReverseMap();
             //.ForMember(dto => dto.IsOnWork, cfg => cfg.MapFrom(account => account.LastCourierSessionId != null)).ReverseMap();
 
             CreateMap<CourierMessageDto, CourierMessage>().ReverseMap();

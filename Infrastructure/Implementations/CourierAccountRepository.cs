@@ -15,17 +15,20 @@ namespace Infrastructure.Implementations
 
         public async Task<CourierAccount> GetById(long id)
         {
-            return await Context.CourierAccounts.FindAsync(id);
+            return await Context.CourierAccounts
+                .TakeNonDeleted().FirstOrDefaultAsync(ca => ca.Id == id);
         }
 
         public async Task<CourierAccount> GetByLogin(string login)
         {
-            return await Context.CourierAccounts.FirstOrDefaultAsync(wa => wa.Login == login);
+            return await Context.CourierAccounts
+                .TakeNonDeleted().FirstOrDefaultAsync(wa => wa.Login == login);
         }
 
         public async Task<ICollection<CourierAccount>> GetByRestaurant(long restaurantId)
         {
             return await Context.CourierAccounts
+                .TakeNonDeleted()
                 .Include(ca => ca.LastLatLng)
                 .Where(ca => ca.AssignedToRestaurantId == restaurantId).ToListAsync();
         }
@@ -33,6 +36,7 @@ namespace Infrastructure.Implementations
         public async Task<ICollection<CourierAccount>> GetByRestaurantAndOnWork(long restaurantId)
         {
             return await Context.CourierAccounts
+                .TakeNonDeleted()
                 .Include(ca => ca.LastLatLng)
                 .Where(ca => ca.AssignedToRestaurantId == restaurantId && ca.LastCourierSessionId != null).ToListAsync();
         }

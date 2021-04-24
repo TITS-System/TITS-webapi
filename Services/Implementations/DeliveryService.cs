@@ -21,12 +21,13 @@ namespace Services.Implementations
         private IDeliveryRepository _deliveryRepository;
         private ICourierAccountRepository _courierAccountRepository;
         private ILatLngRepository _latLngRepository;
+        private IRestaurantRepository _restaurantRepository;
 
         private ILogger<DeliveryService> _logger;
 
         private IMapper _mapper;
 
-        public DeliveryService(IOrderRepository orderRepository, IDeliveryRepository deliveryRepository, ICourierAccountRepository courierAccountRepository, ILatLngRepository latLngRepository, IMapper mapper, ILogger<DeliveryService> logger)
+        public DeliveryService(IOrderRepository orderRepository, IDeliveryRepository deliveryRepository, ICourierAccountRepository courierAccountRepository, ILatLngRepository latLngRepository, IMapper mapper, ILogger<DeliveryService> logger, IRestaurantRepository restaurantRepository)
         {
             _orderRepository = orderRepository;
             _deliveryRepository = deliveryRepository;
@@ -34,8 +35,9 @@ namespace Services.Implementations
             _latLngRepository = latLngRepository;
             _mapper = mapper;
             _logger = logger;
+            _restaurantRepository = restaurantRepository;
         }
-        
+
         public async Task<CreatedDto> BeginDelivery(BeginDeliveryDto beginDeliveryDto)
         {
             var order = await _orderRepository.GetById(beginDeliveryDto.OrderId);
@@ -59,6 +61,11 @@ namespace Services.Implementations
                 throw new(MessagesVerbatim.AccountNotFound);
             }
 
+            if (courierAccount.LastCourierSessionId == null)
+            {
+                throw new("Courier is not at work");
+            }
+
             var delivery = new Delivery()
             {
                 CourierAccount = courierAccount,
@@ -68,9 +75,9 @@ namespace Services.Implementations
             };
 
             await _deliveryRepository.Insert(delivery);
-            
+
             // TODO: Notify
-            
+
             _logger.LogCritical($"Began delivery {delivery.Id} for {order.Id} - Courier {courierAccount.Id}");
 
             return new CreatedDto(delivery.Id);
@@ -99,7 +106,7 @@ namespace Services.Implementations
             {
                 throw new("Delivery no found");
             }
-            
+
             // It can't be null, it would be a system data consistency error
 
             LatLng latLng = _mapper.Map<LatLng>(addDeliveryLocationDto.LatLngDto);
@@ -196,6 +203,21 @@ namespace Services.Implementations
             }
 
             var deliveries = await _deliveryRepository.GetByOrderId(orderId);
+
+            var deliveryDtos = _mapper.Map<ICollection<DeliveryDto>>(deliveries);
+
+            return new DeliveriesDto(deliveryDtos);
+        }
+
+        public async Task<DeliveriesDto> GetAllByRestaurant(long restaurantId)
+        {
+            var restaurant = await _restaurantRepository.GetById(restaurantId);
+            if (restaurant == null)
+            {
+                throw new("Restaurant not found");
+            }
+            
+            var deliveries = await _deliveryRepository.GetByRestaurantId(restaurantId);
 
             var deliveryDtos = _mapper.Map<ICollection<DeliveryDto>>(deliveries);
 

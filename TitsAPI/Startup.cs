@@ -44,38 +44,38 @@ namespace TitsAPI
                 );
 
             // DbContext will take connection string from Environment or throw
-            services.AddDbContext<TitsDbContext>();
+            services.AddSingleton<TitsDbContext>();
 
             // Add Repositories
-            services.AddScoped<ICourierTokenSessionRepository, CourierTokenSessionRepository>();
-            services.AddScoped<IManagerTokenSessionRepository, ManagerTokenSessionRepository>();
-            services.AddScoped<IAccountRepository, AccountRepository>();
-            services.AddScoped<ICourierAccountRepository, CourierAccountRepository>();
-            services.AddScoped<IManagerAccountRepository, ManagerAccountRepository>();
-            services.AddScoped<IWorkerRoleRepository, WorkerRoleRepository>();
-            services.AddScoped<IWorkerToRoleRepository, WorkerToRoleRepository>();
-            services.AddScoped<IDeliveryRepository, DeliveryRepository>();
-            services.AddScoped<ILatLngRepository, LatLngRepository>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IRestaurantRepository, RestaurantRepository>();
-            services.AddScoped<ICourierSessionRepository, CourierSessionRepository>();
-            services.AddScoped<ICourierMessageRepository, CourierMessageRepository>();
-            services.AddScoped<ISosRequestRepository, SosRequestRepository>();
-            services.AddScoped<IZoneRepository, ZoneRepository>();
+            services.AddSingleton<ICourierTokenSessionRepository, CourierTokenSessionRepository>();
+            services.AddSingleton<IManagerTokenSessionRepository, ManagerTokenSessionRepository>();
+            services.AddSingleton<IAccountRepository, AccountRepository>();
+            services.AddSingleton<ICourierAccountRepository, CourierAccountRepository>();
+            services.AddSingleton<IManagerAccountRepository, ManagerAccountRepository>();
+            services.AddSingleton<IWorkerRoleRepository, WorkerRoleRepository>();
+            services.AddSingleton<IWorkerToRoleRepository, WorkerToRoleRepository>();
+            services.AddSingleton<IDeliveryRepository, DeliveryRepository>();
+            services.AddSingleton<ILatLngRepository, LatLngRepository>();
+            services.AddSingleton<IOrderRepository, OrderRepository>();
+            services.AddSingleton<IRestaurantRepository, RestaurantRepository>();
+            services.AddSingleton<ICourierSessionRepository, CourierSessionRepository>();
+            services.AddSingleton<ICourierMessageRepository, CourierMessageRepository>();
+            services.AddSingleton<ISosRequestRepository, SosRequestRepository>();
+            services.AddSingleton<IZoneRepository, ZoneRepository>();
 
             // Add Services
-            services.AddScoped<ITokenSessionService, TokenSessionService>();
-            services.AddScoped<ICourierAccountService, CourierAccountService>();
-            services.AddScoped<IManagerAccountService, ManagerAccountService>();
-            services.AddScoped<IAccountRoleService, AccountRoleService>();
-            services.AddScoped<IOrderService, OrderService>();
-            services.AddScoped<ICourierSessionService, CourierSessionService>();
-            services.AddScoped<IDeliveryService, DeliveryService>();
-            services.AddScoped<IRestaurantService, RestaurantService>();
-            services.AddScoped<IMessagingService, MessagingService>();
-            services.AddScoped<ISosService, SosService>();
-            services.AddScoped<IZoneService, ZoneService>();
-            services.AddScoped<IStatsService, StatsService>();
+            services.AddSingleton<ITokenSessionService, TokenSessionService>();
+            services.AddSingleton<ICourierAccountService, CourierAccountService>();
+            services.AddSingleton<IManagerAccountService, ManagerAccountService>();
+            services.AddSingleton<IAccountRoleService, AccountRoleService>();
+            services.AddSingleton<IOrderService, OrderService>();
+            services.AddSingleton<ICourierSessionService, CourierSessionService>();
+            services.AddSingleton<IDeliveryService, DeliveryService>();
+            services.AddSingleton<IRestaurantService, RestaurantService>();
+            services.AddSingleton<IMessagingService, MessagingService>();
+            services.AddSingleton<ISosService, SosService>();
+            services.AddSingleton<IZoneService, ZoneService>();
+            services.AddSingleton<IStatsService, StatsService>();
             
             services.AddSingleton<IAutoDeliveryServerService, AutoDeliveryServerService>();
 

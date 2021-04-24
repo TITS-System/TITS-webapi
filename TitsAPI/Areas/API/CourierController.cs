@@ -115,13 +115,59 @@ namespace TitsAPI.Areas.API
         }
         
         [HttpGet]
-        [TypeFilter(typeof(ManagerTokenFilter))]
-        public async Task<ActionResult<GetCouriersResultDto>> GetAllByRestaurant(long restaurantId)
+        [TypeFilter(typeof(CourierTokenFilter))]
+        public async Task<ActionResult<GetCouriersResultDto>> CGetAllByRestaurant(long restaurantId)
         {
             try
             {
                 var getCouriersResultDto = await _restaurantService.GetCouriers(restaurantId);
                 return getCouriersResultDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+        
+        [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult<GetCouriersResultDto>> MGetAllByRestaurant(long restaurantId)
+        {
+            try
+            {
+                var getCouriersResultDto = await _restaurantService.GetCouriers(restaurantId);
+                return getCouriersResultDto;
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+        
+        [HttpGet]
+        [TypeFilter(typeof(ManagerTokenFilter))]
+        public async Task<ActionResult> DeleteCourier(long courierId)
+        {
+            try
+            {
+                await _courierAccountService.Delete(courierId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return TitsError(ex.Message);
+            }
+        }
+        
+        
+        [HttpGet]
+        public async Task<ActionResult> SeedCourier()
+        {
+            Random random = new Random(DateTime.Now.Millisecond);
+            try
+            {
+                await _courierAccountService.CreateCourier(new CreateCourierAccountDto(){Login = "Courier" + random.Next(0, 500), Password = "1", RestaurantId = 1, Username = "Generated User " + random.Next(1000)});
+                return Ok();
             }
             catch (Exception ex)
             {

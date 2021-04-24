@@ -22,6 +22,8 @@ namespace Services.Abstractions
         Task<DeliveriesDto> GetInProgressByCourier(long courierId);
         
         Task<DeliveriesDto> GetAllByOrder(long orderId);
+        
+        Task<DeliveriesDto> GetAllByRestaurant(long restaurantId);
 
 
         // TODO: Get Courier Open Deliveries

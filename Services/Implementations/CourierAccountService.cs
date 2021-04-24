@@ -115,6 +115,19 @@ namespace Services.Implementations
             return new GetRolesResultDto(roleDtos);
         }
 
+        public async Task Delete(long courierId)
+        {
+            var courierAccount = await _courierAccountRepository.GetById(courierId);
+
+            if (courierAccount == null)
+            {
+                throw new(MessagesVerbatim.AccountNotFound);
+            }
+
+            courierAccount.IsDeleted = true;
+            await _courierAccountRepository.Update(courierAccount);
+        }
+
         public async Task ChangeCourierProfile(ChangeCourierProfileDto changeCourierProfileDto)
         {
             var courierAccount = await _courierAccountRepository.GetById(changeCourierProfileDto.CourierId);

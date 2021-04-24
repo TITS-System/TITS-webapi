@@ -15,6 +15,8 @@ namespace Services.Abstractions
         Task<CourierFullInfoDto> GetFullInfo(long courierId);
 
         Task<GetRolesResultDto> GetRoles(long courierId);
+        
+        Task Delete(long courierId);
 
         Task ChangeCourierProfile(ChangeCourierProfileDto changeCourierProfileDto);
     }
